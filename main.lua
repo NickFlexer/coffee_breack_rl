@@ -18,6 +18,7 @@ local GenerateMapEvent = require "events.generate_map_event"
 local MapType = require "enums.map_type"
 
 local Map = require "world.map"
+local Hero = require "world.units.hero"
 
 
 local engine = {}
@@ -28,7 +29,8 @@ function love.load()
     engine = Engine()
     event_manager = EventManager()
 
-    local map = Map()
+    local hero = Hero()
+    local map = Map({hero = hero})
 
     local view_system = ViewSystem({map = map})
 

@@ -7,10 +7,19 @@ local Cell = class("Cell")
 
 function Cell:initialize()
     self.name = cells.cell
+    self.character = nil
 end
 
 function Cell:get_name()
     return self.name
+end
+
+function Cell:set_character(character)
+    self.character = character
+end
+
+function Cell:get_character()
+    return self.character
 end
 
 return Cell
