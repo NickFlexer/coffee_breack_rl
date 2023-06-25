@@ -22,4 +22,11 @@ function Cell:get_character()
     return self.character
 end
 
+function Cell:remove_character()
+    local character = self.character
+    self.character = nil
+
+    return character
+end
+
 return Cell

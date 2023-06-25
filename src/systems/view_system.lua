@@ -20,6 +20,9 @@ function ViewSystem:initialize(data)
     self.radius_x = 15
     self.radius_y = 10
 
+    self.shift_x = 8
+    self.shift_y = 8
+
     self.canvas = love.graphics.newCanvas()
     self.tc = TileCutter("res/tileset/fantasy-tileset.png", self.cell_size)
     self.tc:config_tileset(
@@ -73,6 +76,15 @@ function ViewSystem:handle_event(event)
     end
 
     self.canvas:renderTo(function()
+        love.graphics.clear()
+        love.graphics.rectangle(
+            "line",
+            4,
+            4,
+            (self.radius_x * 2 + 1) * self.cell_size + 8,
+            (self.radius_y * 2 + 1) * self.cell_size + 8
+        )
+
         local x, y = 1, 1
 
         for map_y = y_0, y_1 do
@@ -81,14 +93,18 @@ function ViewSystem:handle_event(event)
                 local cell = map_grid:get_cell(map_x, map_y)
 
                 if cell:get_name() ~= cells.ground then
-                    self.tc:draw(cell:get_name(), (x - 1) * self.cell_size, (y - 1) * self.cell_size)
+                    self.tc:draw(
+                        cell:get_name(),
+                        (x - 1) * self.cell_size + self.shift_x,
+                        (y - 1) * self.cell_size + self.shift_y
+                    )
                 end
 
                 if cell:get_character() then
                     self.tc:draw(
                         cell:get_character():get_tile(),
-                        (x - 1) * self.cell_size,
-                        (y - 1) * self.cell_size
+                        (x - 1) * self.cell_size + self.shift_x,
+                        (y - 1) * self.cell_size + self.shift_y
                     )
                 end
 
