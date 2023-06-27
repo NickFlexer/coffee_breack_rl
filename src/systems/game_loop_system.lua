@@ -24,7 +24,7 @@ end
 function GameLoopSystem:update(dt)
     local actor = self.map:get_characters():get()
 
-    local action = actor.character:get_action()
+    local action = actor:get_action()
 
     if action then
         local success = action:perform({actor = actor, map = self.map})

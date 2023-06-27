@@ -22,7 +22,7 @@ function MoveAction:perform(data)
         error("MoveAction:perform NO data.map!")
     end
 
-    local cur_x, cur_y = data.actor.pos_x, data.actor.pos_y
+    local cur_x, cur_y = data.map:get_hero_position()
     local new_x, new_y
 
     if self.direction == MovingDirection.up then
@@ -36,12 +36,12 @@ function MoveAction:perform(data)
     end
 
     if data.map:get_grid():is_valid(new_x, new_y) then
-        print("NEW X: " .. tostring(new_x) .. " NEW Y: " .. tostring(new_x))
+        print("NEW X: " .. tostring(new_x) .. " NEW Y: " .. tostring(new_y))
         data.map:move_cahracter(cur_x, cur_y, new_x, new_y)
 
-        data.actor.pos_x, data.actor.pos_y = new_x, new_y
-
         return true
+    else
+        print("!!")
     end
 
     return false
