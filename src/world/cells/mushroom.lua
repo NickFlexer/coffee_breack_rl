@@ -10,6 +10,9 @@ function Mushroom:initialize()
     Cell.initialize(self)
 
     self.name = cells.mushroom
+    self.move_blocked = true
+
+    self.transparent = false
 end
 
 return Mushroom

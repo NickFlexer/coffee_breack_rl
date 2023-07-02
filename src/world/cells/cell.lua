@@ -8,6 +8,11 @@ local Cell = class("Cell")
 function Cell:initialize()
     self.name = cells.cell
     self.character = nil
+    self.move_blocked = false
+
+    self.obscured = true
+    self.visible = false
+    self.transparent = true
 end
 
 function Cell:get_name()
@@ -27,6 +32,30 @@ function Cell:remove_character()
     self.character = nil
 
     return character
+end
+
+function Cell:is_move_blocked()
+    return self.move_blocked
+end
+
+function Cell:is_obscured()
+    return self.obscured
+end
+
+function Cell:is_transparent()
+    return self.transparent
+end
+
+function Cell:illuminate()
+    self.obscured = false
+end
+
+function Cell:is_visible()
+    return self.visible
+end
+
+function Cell:set_visible(visible)
+    self.visible = visible
 end
 
 return Cell

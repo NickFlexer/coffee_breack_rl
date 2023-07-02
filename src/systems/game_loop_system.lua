@@ -1,6 +1,7 @@
 local class = require "middleclass"
 
 local UpdateViewEvent = require "events.update_view_event"
+local SolveFovEvent = require "events.solve_fov_event"
 
 
 local GameLoopSystem = class("GameLoopSystem", System)
@@ -30,6 +31,7 @@ function GameLoopSystem:update(dt)
         local success = action:perform({actor = actor, map = self.map})
 
         if success then
+            self.event_manager:fireEvent(SolveFovEvent())
             self.event_manager:fireEvent(UpdateViewEvent())
         end
     end

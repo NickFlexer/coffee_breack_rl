@@ -4,7 +4,9 @@ local Cells = {
     wall = "WALL",
     mushroom = "MUSHROOM",
 
-    barbarian = "BARBARIAN"
+    barbarian = "BARBARIAN",
+
+    shadow = "SHADOW"
 }
 
 return Cells

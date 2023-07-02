@@ -10,6 +10,9 @@ function Ground:initialize()
     Cell.initialize(self)
 
     self.name = cells.ground
+    self.move_blocked = false
+
+    self.transparent = true
 end
 
 return Ground

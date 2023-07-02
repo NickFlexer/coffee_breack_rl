@@ -30,7 +30,9 @@ function ViewSystem:initialize(data)
             {cells.wall, 2, 2},
             {cells.mushroom, 1, 21},
 
-            {cells.barbarian, 3, 19}
+            {cells.barbarian, 3, 19},
+
+            {cells.shadow, 4, 1}
         }
     )
 end
@@ -89,17 +91,33 @@ function ViewSystem:handle_event(event)
                 if map_grid:is_valid(map_x, map_y) then
                     local cell = map_grid:get_cell(map_x, map_y)
 
-                    if cell:get_name() ~= cells.ground then
+                    if not map_grid:get_cell(map_x, map_y):is_obscured() then
+                        if cell:get_name() ~= cells.ground then
+                            self.tc:draw(
+                                cell:get_name(),
+                                (x - 1) * self.cell_size + self.shift_x,
+                                (y - 1) * self.cell_size + self.shift_y
+                            )
+                        end
+    
+                        if not cell:is_visible() then
+                            self.tc:draw(
+                                cells.shadow,
+                                (x - 1) * self.cell_size + self.shift_x,
+                                (y - 1) * self.cell_size + self.shift_y
+                            )
+                        end
+    
+                        if cell:get_character() then
+                            self.tc:draw(
+                                cell:get_character():get_tile(),
+                                (x - 1) * self.cell_size + self.shift_x,
+                                (y - 1) * self.cell_size + self.shift_y
+                            )
+                        end
+                    else
                         self.tc:draw(
-                            cell:get_name(),
-                            (x - 1) * self.cell_size + self.shift_x,
-                            (y - 1) * self.cell_size + self.shift_y
-                        )
-                    end
-
-                    if cell:get_character() then
-                        self.tc:draw(
-                            cell:get_character():get_tile(),
+                            cells.shadow,
                             (x - 1) * self.cell_size + self.shift_x,
                             (y - 1) * self.cell_size + self.shift_y
                         )

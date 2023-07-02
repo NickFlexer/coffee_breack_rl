@@ -35,7 +35,7 @@ function MoveAction:perform(data)
         new_x, new_y = cur_x + 1, cur_y
     end
 
-    if data.map:get_grid():is_valid(new_x, new_y) then
+    if data.map:get_grid():is_valid(new_x, new_y) and data.map:can_move(new_x, new_y) then
         print("NEW X: " .. tostring(new_x) .. " NEW Y: " .. tostring(new_y))
         data.map:move_cahracter(cur_x, cur_y, new_x, new_y)
 

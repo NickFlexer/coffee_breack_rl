@@ -16,6 +16,7 @@ local GameLoopSystem = require "systems.game_loop_system"
 
 local UpdateViewEvent = require "events.update_view_event"
 local GenerateMapEvent = require "events.generate_map_event"
+local SolveFovEvent = require "events.solve_fov_event"
 
 local MapType = require "enums.map_type"
 
@@ -42,10 +43,12 @@ function love.load()
     engine:addSystem(view_system, "draw")
 
     event_manager:addListener("UpdateViewEvent", view_system, view_system.handle_event)
+    event_manager:addListener("SolveFovEvent", map, map.handle_event)
     event_manager:addListener("GenerateMapEvent", map, map.handle_event)
     event_manager:addListener("HeroActionEvent", hero, hero.handle_event)
 
     event_manager:fireEvent(GenerateMapEvent(MapType.mushroom_forest))
+    event_manager:fireEvent(SolveFovEvent())
     event_manager:fireEvent(UpdateViewEvent())
 end
 
