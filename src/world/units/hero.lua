@@ -4,8 +4,10 @@ local Character = require "world.units.character"
 
 local Cells = require "enums.cells"
 local MovingDirection = require "enums.moving_direction"
+local Actions = require "enums.actions"
 
 local MoveAction = require "logic.actions.move_action"
+local PassAction = require "logic.actions.pass_action"
 
 
 local Hero = class("Hero", Character)
@@ -39,6 +41,10 @@ function Hero:handle_event(event)
         self.action = MoveAction({direction = MovingDirection.right})
 
         return
+    end
+
+    if event:get_action_type() == Actions.pass then
+        self.action = PassAction()
     end
 end
 

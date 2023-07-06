@@ -1,11 +1,18 @@
 local class = require "middleclass"
 
+local BasicAction = require "logic.actions.basic_action"
+
 local MovingDirection = require "enums.moving_direction"
+local Actions = require "enums.actions"
 
 
-local MoveAction = class("MoveAction")
+local MoveAction = class("MoveAction", BasicAction)
 
 function MoveAction:initialize(data)
+    BasicAction:initialize(self)
+
+    self.type = Actions.move
+
     if not data.direction then
         error("MoveAction:initialize NO data.direction!")
     end

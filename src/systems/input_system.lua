@@ -5,6 +5,8 @@ local Input = require 'Input'
 local HeroActionEvent = require "events.hero_action_event"
 local MovingDirection = require "enums.moving_direction"
 
+local Actions = require "enums.actions"
+
 
 local InputSystem = class("InputSystem", System)
 
@@ -23,7 +25,9 @@ function InputSystem:initialize(data)
         {"w", MovingDirection.up},
         {"s", MovingDirection.down},
         {"a", MovingDirection.left},
-        {"d", MovingDirection.right}
+        {"d", MovingDirection.right},
+
+        {"p", Actions.pass}
     }
 
     for _, button in ipairs(self.buttons) do
