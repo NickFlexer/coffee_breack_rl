@@ -13,6 +13,7 @@ lovetoys.initialize({
 local ViewSystem = require "systems.view_system"
 local InputSystem = require "systems.input_system"
 local GameLoopSystem = require "systems.game_loop_system"
+local AISystem = require "systems.ai_system"
 
 local UpdateViewEvent = require "events.update_view_event"
 local GenerateMapEvent = require "events.generate_map_event"
@@ -39,6 +40,7 @@ function love.load()
 
     engine:addSystem(view_system, "update")
     engine:addSystem(InputSystem({event_manager = event_manager}), "update")
+    engine:addSystem(AISystem({map = map}), "update")
     engine:addSystem(GameLoopSystem({map = map, event_manager = event_manager}), "update")
     engine:addSystem(view_system, "draw")
 

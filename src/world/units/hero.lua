@@ -5,6 +5,7 @@ local Character = require "world.units.character"
 local Cells = require "enums.cells"
 local MovingDirection = require "enums.moving_direction"
 local Actions = require "enums.actions"
+local CharacterControl = require "enums.character_control"
 
 local MoveAction = require "logic.actions.move_action"
 local PassAction = require "logic.actions.pass_action"
@@ -13,9 +14,10 @@ local PassAction = require "logic.actions.pass_action"
 local Hero = class("Hero", Character)
 
 function Hero:initialize()
-    self.tile = Cells.barbarian
-
     Character:initialize(self)
+
+    self.tile = Cells.barbarian
+    self.control = CharacterControl.player
 end
 
 function Hero:handle_event(event)
@@ -44,7 +46,7 @@ function Hero:handle_event(event)
     end
 
     if event:get_action_type() == Actions.pass then
-        self.action = PassAction()
+        self:set_action(PassAction())
     end
 end
 

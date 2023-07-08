@@ -23,7 +23,7 @@ function ViewSystem:initialize(data)
     self.shift_x = 8
     self.shift_y = 8
 
-    self.canvas = love.graphics.newCanvas()
+    self.map_canvas = love.graphics.newCanvas()
     self.tc = TileCutter("res/tileset/fantasy-tileset.png", self.cell_size)
     self.tc:config_tileset(
         {
@@ -31,6 +31,7 @@ function ViewSystem:initialize(data)
             {cells.mushroom, 1, 21},
 
             {cells.barbarian, 3, 19},
+            {cells.rabbit, 2, 21},
 
             {cells.shadow, 4, 1}
         }
@@ -42,7 +43,7 @@ end
 
 function ViewSystem:draw()
     love.graphics.setColor(1, 1, 1);
-    love.graphics.draw(self.canvas)
+    love.graphics.draw(self.map_canvas)
 end
 
 function ViewSystem:requires()
@@ -73,7 +74,7 @@ function ViewSystem:handle_event(event)
         x_0 = map_size_x - self.radius_x * 2
     end
 
-    self.canvas:renderTo(function()
+    self.map_canvas:renderTo(function()
         love.graphics.clear()
         love.graphics.rectangle(
             "line",
@@ -99,21 +100,21 @@ function ViewSystem:handle_event(event)
                                 (y - 1) * self.cell_size + self.shift_y
                             )
                         end
-    
+
                         if not cell:is_visible() then
                             self.tc:draw(
                                 cells.shadow,
                                 (x - 1) * self.cell_size + self.shift_x,
                                 (y - 1) * self.cell_size + self.shift_y
                             )
-                        end
-    
-                        if cell:get_character() then
-                            self.tc:draw(
-                                cell:get_character():get_tile(),
-                                (x - 1) * self.cell_size + self.shift_x,
-                                (y - 1) * self.cell_size + self.shift_y
-                            )
+                        else
+                            if cell:get_character() then
+                                self.tc:draw(
+                                    cell:get_character():get_tile(),
+                                    (x - 1) * self.cell_size + self.shift_x,
+                                    (y - 1) * self.cell_size + self.shift_y
+                                )
+                            end
                         end
                     else
                         self.tc:draw(

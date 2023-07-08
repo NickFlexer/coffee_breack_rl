@@ -81,4 +81,8 @@ function Ringer:is_empty()
     return not next(self.buffer)
 end
 
+function Ringer:get_all()
+    return self.buffer
+end
+
 return setmetatable(Ringer, {__call = Ringer.new})

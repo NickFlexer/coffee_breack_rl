@@ -13,6 +13,10 @@ local Mushroom = require "world.cells.mushroom"
 local MapType = require "enums.map_type"
 local cells = require "enums.cells"
 
+local Rabbit = require "world.units.rabbit"
+
+local DummyAI = require "logic.ai.dummy"
+
 
 local Map = class("Map")
 
@@ -55,6 +59,22 @@ function Map:handle_event(event)
                 self.world_map:get_cell(pos_x, pos_y):set_character(self.hero)
 
                 break
+            end
+        end
+
+        for i = 1, 2 do
+            while true do
+                local pos_x, pos_y = math.random(self.map_size_x), math.random(self.map_size_y)
+                local cur_cell = self.world_map:get_cell(pos_x, pos_y)
+
+                if cur_cell:get_name() == cells.ground and not cur_cell:get_character() then
+                    local rabbit = Rabbit({ai = DummyAI()})
+
+                    self.world_map:get_cell(pos_x, pos_y):set_character(rabbit)
+                    self.characters:insert(rabbit)
+
+                    break
+                end
             end
         end
     elseif event.class.name == SolveFovEvent.name then
