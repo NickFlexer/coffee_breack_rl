@@ -33,6 +33,8 @@ function GameLoopSystem:update(dt)
 
     local success = action:perform({actor = actor, map = self.map})
 
+    print("ACTOR " .. actor.class.name)
+
     if success then
         self.event_manager:fireEvent(SolveFovEvent())
         self.event_manager:fireEvent(UpdateViewEvent())

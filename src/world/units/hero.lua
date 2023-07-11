@@ -22,25 +22,25 @@ end
 
 function Hero:handle_event(event)
     if event:get_action_type() == MovingDirection.up then
-        self.action = MoveAction({direction = MovingDirection.up})
+        self:set_action(MoveAction({direction = MovingDirection.up}))
 
         return
     end
 
     if event:get_action_type() == MovingDirection.down then
-        self.action = MoveAction({direction = MovingDirection.down})
+        self:set_action(MoveAction({direction = MovingDirection.down}))
 
         return
     end
 
     if event:get_action_type() == MovingDirection.left then
-        self.action = MoveAction({direction = MovingDirection.left})
+        self:set_action(MoveAction({direction = MovingDirection.left}))
 
         return
     end
 
     if event:get_action_type() == MovingDirection.right then
-        self.action = MoveAction({direction = MovingDirection.right})
+        self:set_action(MoveAction({direction = MovingDirection.right}))
 
         return
     end

@@ -3,6 +3,7 @@ local Grid = require "grid"
 local Ring = require "ringer"
 
 local FOV = require "ppfov"
+local Luastar = require "lua-star"
 
 local GenerateMapEvent = require "events.generate_map_event"
 local SolveFovEvent = require "events.solve_fov_event"
@@ -16,6 +17,7 @@ local cells = require "enums.cells"
 local Rabbit = require "world.units.rabbit"
 
 local DummyAI = require "logic.ai.dummy"
+local RabbitAI = require "logic.ai.rabbit_ai"
 
 
 local Map = class("Map")
@@ -62,13 +64,13 @@ function Map:handle_event(event)
             end
         end
 
-        for i = 1, 2 do
+        for i = 1, 1 do
             while true do
                 local pos_x, pos_y = math.random(self.map_size_x), math.random(self.map_size_y)
                 local cur_cell = self.world_map:get_cell(pos_x, pos_y)
 
                 if cur_cell:get_name() == cells.ground and not cur_cell:get_character() then
-                    local rabbit = Rabbit({ai = DummyAI()})
+                    local rabbit = Rabbit({ai = RabbitAI()})
 
                     self.world_map:get_cell(pos_x, pos_y):set_character(rabbit)
                     self.characters:insert(rabbit)
@@ -96,15 +98,19 @@ function Map:handle_event(event)
             end
         end
 
-        local hero_x, hero_y = self:get_hero_position()
+        local hero_x, hero_y = self:get_character_position(self.hero)
 
         FOV(hero_x, hero_y, 8, is_transparent, on_visible)
     end
 end
 
-function Map:get_hero_position()
+function Map:get_hero()
+    return self.hero
+end
+
+function Map:get_character_position(character)
     for x, y, cell in self.world_map:iterate() do
-        if cell:get_character() == self.hero then
+        if cell:get_character() == character then
             return x, y
         end
     end
@@ -119,7 +125,7 @@ function Map:get_size()
 end
 
 function Map:can_move(x, y)
-    return not self.world_map:get_cell(x, y):is_move_blocked()
+    return self.world_map:is_valid(x, y) and not self.world_map:get_cell(x, y):is_move_blocked()
 end
 
 function Map:move_cahracter(x0, y0, x1, y1)
@@ -131,6 +137,22 @@ function Map:reset_visible()
     for x, y, cell in self.world_map:iterate() do
         self.world_map:get_cell(x, y):set_visible(false)
     end
+end
+
+function Map:solve_path(x0, y0, x1, y1)
+    local path = Luastar:find(
+        self.map_size_y,
+        self.map_size_x,
+        {x = x0, y = y0},
+        {x = x1, y = y1},
+        function (x, y)
+            return self:can_move(x, y) and (not self.world_map:get_cell(x, y):get_character())
+        end,
+        false,
+        true
+    )
+
+    return path
 end
 
 return Map

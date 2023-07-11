@@ -29,7 +29,7 @@ function MoveAction:perform(data)
         error("MoveAction:perform NO data.map!")
     end
 
-    local cur_x, cur_y = data.map:get_hero_position()
+    local cur_x, cur_y = data.map:get_character_position(data.actor)
     local new_x, new_y
 
     if self.direction == MovingDirection.up then

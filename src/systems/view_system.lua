@@ -53,8 +53,10 @@ end
 function ViewSystem:handle_event(event)
     local map_grid = self.map:get_grid()
 
+    local hero = self.map:get_hero()
+
     local map_size_x, map_size_y = self.map:get_size()
-    local hero_pos_x, hero_pos_y = self.map:get_hero_position()
+    local hero_pos_x, hero_pos_y = self.map:get_character_position(hero)
 
     local y_0 = math.max(1, hero_pos_y - self.radius_y)
     local y_1 = math.min(map_size_y, hero_pos_y + self.radius_y)
