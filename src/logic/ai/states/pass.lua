@@ -10,7 +10,7 @@ function PassState:initialize(data)
 end
 
 function PassState:enter(owner)
-    print("PassState:enter")
+    Log.trace("PassState:enter")
 
     self.count = 0
 end
@@ -20,11 +20,11 @@ function PassState:execute(owner, data)
 
     self.count = self.count + 1
 
-    print("PASS COUNT " .. self.count)
+    Log.trace("PASS COUNT " .. self.count)
 end
 
 function PassState:exit(owner)
-    print("PassState:exit")
+    Log.trace("PassState:exit")
 end
 
 function PassState:get_count()

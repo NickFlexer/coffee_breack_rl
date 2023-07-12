@@ -8,7 +8,7 @@ function CarelessState:initialize(data)
 end
 
 function CarelessState:enter(owner)
-    print("CarelessState:enter")
+    Log.trace("CarelessState:enter")
 
     owner:set_path(nil)
 end
@@ -23,16 +23,18 @@ function CarelessState:execute(owner, data)
     end
 
     local cur_x, cur_y = data.map:get_character_position(data.character)
-    print(cur_x, cur_y)
+    Log.trace("CURRENT POSITION: " .. cur_x, cur_y)
 
     local aim_x, aim_y
 
     while true do
         aim_x, aim_y = math.random(cur_x - 4, cur_x + 4), math.random(cur_y - 4, cur_y + 4)
-        print("AIM " .. aim_x, aim_y)
 
         if data.map:can_move(aim_x, aim_y) and (cur_x ~= aim_x and cur_y ~= aim_y) then
+            Log.trace("Aim find! " .. aim_x, aim_y)
             break
+        else
+            Log.trace("Resolve aim")
         end
     end
 
@@ -47,7 +49,7 @@ function CarelessState:execute(owner, data)
 end
 
 function CarelessState:exit(owner)
-    print("CarelessState:exit")
+    Log.trace("CarelessState:exit")
 end
 
 return CarelessState

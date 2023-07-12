@@ -9,6 +9,8 @@ lovetoys.initialize({
     debug = true
 })
 
+Log = require "log"
+
 
 local ViewSystem = require "systems.view_system"
 local InputSystem = require "systems.input_system"
@@ -30,6 +32,8 @@ local event_manager = {}
 
 
 function love.load()
+    Log.debug("Load start")
+
     engine = Engine()
     event_manager = EventManager()
 
@@ -52,6 +56,8 @@ function love.load()
     event_manager:fireEvent(GenerateMapEvent(MapType.mushroom_forest))
     event_manager:fireEvent(SolveFovEvent())
     event_manager:fireEvent(UpdateViewEvent())
+
+    Log.debug("Load end")
 end
 
 

@@ -19,7 +19,7 @@ function AISystem:update(dt)
     local character = self.map:get_characters():get()
 
     if character:get_control() == CharacterControl.ai then
-        print("AI " .. character.class.name)
+        Log.debug("AI " .. character.class.name)
 
         if not character:get_action() then
             character:think({character = character, map = self.map})

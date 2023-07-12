@@ -14,7 +14,7 @@ function PassAction:initialize(data)
 end
 
 function PassAction:perform(data)
-    print("PASS!!")
+    Log.trace("PASS!")
 
     return true
 end
