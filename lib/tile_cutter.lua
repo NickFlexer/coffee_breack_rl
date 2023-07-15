@@ -27,11 +27,13 @@ end
 
 function TileCutter:config_tileset(tileset_data)
     for _, tile_data in ipairs(tileset_data) do
+        local tile_size = tile_data[4] or self.tile_size
+
         self.quads[tile_data[1]] = love.graphics.newQuad(
-            (self.tile_size * tile_data[2]) - self.tile_size,
-            (self.tile_size * tile_data[3]) - self.tile_size,
-            self.tile_size,
-            self.tile_size,
+            (tile_size * tile_data[2]) - tile_size,
+            (tile_size * tile_data[3]) - tile_size,
+            tile_size,
+            tile_size,
             self.img:getDimensions()
         )
     end

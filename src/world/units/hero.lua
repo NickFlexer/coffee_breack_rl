@@ -13,8 +13,15 @@ local PassAction = require "logic.actions.pass_action"
 
 local Hero = class("Hero", Character)
 
-function Hero:initialize()
+function Hero:initialize(data)
     Character:initialize(self)
+
+    if not data.hp then
+        error("Hero:initializ: no data.hp !")
+    end
+
+    self.max_hp = data.hp
+    self.current_hp = data.hp
 
     self.tile = Cells.barbarian
     self.control = CharacterControl.player

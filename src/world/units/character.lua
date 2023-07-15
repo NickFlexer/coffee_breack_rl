@@ -10,6 +10,8 @@ function Character:initialize(data)
     self.action = nil
     self.control = nil
     self.ai = nil
+    self.max_hp = nil
+    self.current_hp = nil
 end
 
 function Character:get_tile()
@@ -34,6 +36,10 @@ end
 
 function Character:think(data)
     self.ai:perform(data)
+end
+
+function Character:get_hp()
+    return {max = self.max_hp, cur = self.current_hp}
 end
 
 function Character:get_moving_direction(x0, y0, x1, y1)

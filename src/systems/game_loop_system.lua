@@ -31,7 +31,7 @@ function GameLoopSystem:update(dt)
         return
     end
 
-    local success = action:perform({actor = actor, map = self.map})
+    local success = action:perform({actor = actor, map = self.map, event_manager = self.event_manager})
 
     Log.debug("ACTOR " .. actor.class.name)
 

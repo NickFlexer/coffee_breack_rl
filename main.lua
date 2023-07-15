@@ -12,7 +12,7 @@ lovetoys.initialize({
 Log = require "log"
 
 
-local ViewSystem = require "systems.view_system"
+local ViewSystem = require "src.systems.view.view_system"
 local InputSystem = require "systems.input_system"
 local GameLoopSystem = require "systems.game_loop_system"
 local AISystem = require "systems.ai_system"
@@ -37,10 +37,10 @@ function love.load()
     engine = Engine()
     event_manager = EventManager()
 
-    local hero = Hero()
+    local hero = Hero({hp = 20})
     local map = Map({hero = hero})
 
-    local view_system = ViewSystem({map = map})
+    local view_system = ViewSystem({map = map, event_manager = event_manager})
 
     engine:addSystem(view_system, "update")
     engine:addSystem(InputSystem({event_manager = event_manager}), "update")
@@ -49,6 +49,7 @@ function love.load()
     engine:addSystem(view_system, "draw")
 
     event_manager:addListener("UpdateViewEvent", view_system, view_system.handle_event)
+    event_manager:addListener("ShowEffectEvent", view_system, view_system.handle_event)
     event_manager:addListener("SolveFovEvent", map, map.handle_event)
     event_manager:addListener("GenerateMapEvent", map, map.handle_event)
     event_manager:addListener("HeroActionEvent", hero, hero.handle_event)

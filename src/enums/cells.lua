@@ -8,7 +8,9 @@ local Cells = {
 
     rabbit = "RABBIT",
 
-    shadow = "SHADOW"
+    shadow = "SHADOW",
+
+    no_path = "NO_PATH"
 }
 
 return Cells

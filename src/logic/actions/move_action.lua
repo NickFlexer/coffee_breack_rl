@@ -4,6 +4,9 @@ local BasicAction = require "logic.actions.basic_action"
 
 local MovingDirection = require "enums.moving_direction"
 local Actions = require "enums.actions"
+local EffectTypes = require "enums.effect_types"
+
+local ShowEffectEvent = require "events.show_effect_event"
 
 
 local MoveAction = class("MoveAction", BasicAction)
@@ -27,6 +30,10 @@ function MoveAction:perform(data)
 
     if not data.map then
         error("MoveAction:perform NO data.map!")
+    end
+
+    if not data.event_manager then
+        error("MoveAction:perform NO data.event_manager!")
     end
 
     local cur_x, cur_y = data.map:get_character_position(data.actor)
@@ -54,6 +61,8 @@ function MoveAction:perform(data)
         end
     else
         Log.trace("Obstacle!")
+
+        data.event_manager:fireEvent(ShowEffectEvent({type = EffectTypes.no_path, x = new_x, y = new_y}))
     end
 
     return false
