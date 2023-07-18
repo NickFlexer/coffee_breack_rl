@@ -37,7 +37,7 @@ function love.load()
     engine = Engine()
     event_manager = EventManager()
 
-    local hero = Hero({hp = 20})
+    local hero = Hero({hp = 20, attack = {min = 1, max = 4}})
     local map = Map({hero = hero})
 
     local view_system = ViewSystem({map = map, event_manager = event_manager})

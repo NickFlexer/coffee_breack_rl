@@ -12,6 +12,7 @@ function Character:initialize(data)
     self.ai = nil
     self.max_hp = nil
     self.current_hp = nil
+    self.attack = {min = 0, max = 0}
 end
 
 function Character:get_tile()
@@ -40,6 +41,22 @@ end
 
 function Character:get_hp()
     return {max = self.max_hp, cur = self.current_hp}
+end
+
+function Character:new_attack()
+    return math.random(self.attack.min, self.attack.max)
+end
+
+function Character:get_attacks()
+    return self.attack
+end
+
+function Character:decreace_hp(attack)
+    self.current_hp = math.max(self.current_hp - attack, 0)
+end
+
+function Character:is_dead()
+    return self.current_hp == 0
 end
 
 function Character:get_moving_direction(x0, y0, x1, y1)

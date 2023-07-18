@@ -14,12 +14,23 @@ function CarelessState:enter(owner)
 end
 
 function CarelessState:execute(owner, data)
+    Log.trace("CarelessState:execute")
+
     if not data.character then
         error("CarelessState:execute no data.character !")
     end
 
     if not data.map then
         error("CarelessState:execute no data.map !")
+    end
+
+    local pass_chance = math.random(100)
+
+    if pass_chance < 30 then
+        Log.trace("It ganes pass!")
+        owner:get_fsm():change_state(owner:get_states().pass)
+
+        return
     end
 
     local cur_x, cur_y = data.map:get_character_position(data.character)
@@ -32,19 +43,23 @@ function CarelessState:execute(owner, data)
 
         if data.map:can_move(aim_x, aim_y) and (cur_x ~= aim_x and cur_y ~= aim_y) then
             Log.trace("Aim find! " .. aim_x, aim_y)
-            break
+
+            local path = data.map:solve_path(cur_x, cur_y, aim_x, aim_y)
+
+            if path then
+                owner:set_path(path)
+                owner:get_fsm():change_state(owner:get_states().follow_path)
+
+                return
+            else
+                Log.trace("No path!")
+                owner:get_fsm():change_state(owner:get_states().pass)
+
+                return
+            end
         else
             Log.trace("Resolve aim")
         end
-    end
-
-    local path = data.map:solve_path(cur_x, cur_y, aim_x, aim_y)
-
-    if path then
-        owner:set_path(path)
-        owner:get_fsm():change_state(owner:get_states().follow_path)
-    else
-        owner:get_fsm():change_state(owner:get_states().pass)
     end
 end
 

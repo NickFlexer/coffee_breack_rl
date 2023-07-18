@@ -16,7 +16,6 @@ local cells = require "enums.cells"
 
 local Rabbit = require "world.units.rabbit"
 
-local DummyAI = require "logic.ai.dummy"
 local RabbitAI = require "logic.ai.rabbit_ai"
 
 
@@ -70,7 +69,7 @@ function Map:handle_event(event)
                 local cur_cell = self.world_map:get_cell(pos_x, pos_y)
 
                 if cur_cell:get_name() == cells.ground and not cur_cell:get_character() then
-                    local rabbit = Rabbit({ai = RabbitAI()})
+                    local rabbit = Rabbit({ai = RabbitAI(), hp = 4})
 
                     self.world_map:get_cell(pos_x, pos_y):set_character(rabbit)
                     self.characters:insert(rabbit)
@@ -120,12 +119,23 @@ function Map:get_characters()
     return self.characters
 end
 
+function Map:kill_character(character)
+    local pos_x, pos_y = self:get_character_position(character)
+
+    self.world_map:get_cell(pos_x, pos_y):remove_character()
+    self.characters:remove(character)
+
+    if not self.world_map:get_cell(pos_x, pos_y):get_bones() then
+        self.world_map:get_cell(pos_x, pos_y):set_bones()
+    end
+end
+
 function Map:get_size()
     return self.map_size_x, self.map_size_y
 end
 
 function Map:can_move(x, y)
-    return self.world_map:is_valid(x, y) and not self.world_map:get_cell(x, y):is_move_blocked()
+    return (self.world_map:is_valid(x, y) and not self.world_map:get_cell(x, y):is_move_blocked())
 end
 
 function Map:move_cahracter(x0, y0, x1, y1)
@@ -146,9 +156,11 @@ function Map:solve_path(x0, y0, x1, y1)
         {x = x0, y = y0},
         {x = x1, y = y1},
         function (x, y)
-            return self:can_move(x, y) and (not self.world_map:get_cell(x, y):get_character())
+            local result = (self:can_move(x, y) and (not self.world_map:get_cell(x, y):get_character()))
+
+            return result
         end,
-        false,
+        true,
         true
     )
 

@@ -39,7 +39,7 @@ function ViewSystem:initialize(data)
 
     self.map_canvas = love.graphics.newCanvas()
     self.ui_canvas = love.graphics.newCanvas()
-    self.tc = TileCutter("res/tileset/fantasy-tileset-2.png", self.cell_size)
+    self.tc = TileCutter("res/tileset/fantasy-tileset-3.png", self.cell_size)
     self.tc:config_tileset(
         {
             {cells.wall, 2, 2},
@@ -50,7 +50,10 @@ function ViewSystem:initialize(data)
 
             {cells.shadow, 4, 1},
 
-            {cells.no_path, 2, 47, 16}
+            {cells.bones, 3, 17},
+
+            {cells.no_path, 2, 47, 16},
+            {cells.fight, 7, 47, 16}
         }
     )
 
@@ -99,6 +102,20 @@ function ViewSystem:handle_event(event)
             local x, y = event:get_position()
 
             table.insert(self.effects, {cell = cells.no_path, x = x, y = y})
+
+            local effect_index = #self.effects
+
+            self.timer:after(
+                0.1,
+                function()
+                    table.remove(self.effects, effect_index)
+                    self.event_manager:fireEvent(UpdateViewEvent())
+                end
+            )
+        elseif event:get_type() == EffectTypes.fight then
+            local x, y = event:get_position()
+
+            table.insert(self.effects, {cell = cells.fight, x = x, y = y})
 
             local effect_index = #self.effects
 

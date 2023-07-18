@@ -18,7 +18,13 @@ function Rabbit:initialize(data)
         error("Rabbit:initialize no data.ai !")
     end
 
+    if not data.hp then
+        error("Hero:initializ: no data.hp !")
+    end
+
     self.ai = data.ai
+    self.max_hp = data.hp
+    self.current_hp = data.hp
 end
 
 return Rabbit

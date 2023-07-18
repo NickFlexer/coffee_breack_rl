@@ -20,8 +20,13 @@ function Hero:initialize(data)
         error("Hero:initializ: no data.hp !")
     end
 
+    if not data.attack then
+        error("Hero:initializ: no data.attack !")
+    end
+
     self.max_hp = data.hp
     self.current_hp = data.hp
+    self.attack = data.attack
 
     self.tile = Cells.barbarian
     self.control = CharacterControl.player

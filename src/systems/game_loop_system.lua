@@ -31,13 +31,23 @@ function GameLoopSystem:update(dt)
         return
     end
 
-    local success = action:perform({actor = actor, map = self.map, event_manager = self.event_manager})
+    while true do
+        local result = action:perform({actor = actor, map = self.map, event_manager = self.event_manager})
 
-    Log.debug("ACTOR " .. actor.class.name)
+        Log.debug("ACTOR " .. actor.class.name)
 
-    if success then
         self.event_manager:fireEvent(SolveFovEvent())
         self.event_manager:fireEvent(UpdateViewEvent())
+
+        if not result:is_success() then
+            return
+        end
+
+        if not result:get_alternate() then
+            break
+        end
+
+        action = result:get_alternate()
     end
 
     self.map:get_characters():next()

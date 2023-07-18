@@ -1,6 +1,7 @@
 local Actions = {
     move = "MOVE",
-    pass = "PASS"
+    pass = "PASS",
+    fight = "FIGHT"
 }
 
 return Actions

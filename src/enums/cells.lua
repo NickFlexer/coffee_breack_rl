@@ -10,7 +10,10 @@ local Cells = {
 
     shadow = "SHADOW",
 
-    no_path = "NO_PATH"
+    bones = "BONES",
+
+    no_path = "NO_PATH",
+    fight = "FIGHT"
 }
 
 return Cells

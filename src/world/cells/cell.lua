@@ -8,6 +8,7 @@ local Cell = class("Cell")
 function Cell:initialize()
     self.name = cells.cell
     self.character = nil
+    self.bones = false
     self.move_blocked = false
 
     self.obscured = true
@@ -32,6 +33,14 @@ function Cell:remove_character()
     self.character = nil
 
     return character
+end
+
+function Cell:get_bones()
+    return self.bones
+end
+
+function Cell:set_bones()
+    self.bones = true
 end
 
 function Cell:is_move_blocked()

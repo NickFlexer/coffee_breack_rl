@@ -29,6 +29,8 @@ function RabbitAI:perform(data)
     if self.fsm:is_in_state(self.states.pass) and self.fsm:get_current_state():get_count() > 2 then
         self.fsm:change_state(self.states.careless)
     end
+
+    self.fsm:update(data)
 end
 
 function RabbitAI:get_fsm()

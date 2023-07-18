@@ -1,6 +1,8 @@
 local class = require "middleclass"
 
 local BasicAction = require "logic.actions.basic_action"
+local ActionResult = require "logic.actions.action_result"
+local FightAction = require "logic.actions.fight_action"
 
 local MovingDirection = require "enums.moving_direction"
 local Actions = require "enums.actions"
@@ -53,11 +55,13 @@ function MoveAction:perform(data)
         if data.map:get_grid():get_cell(new_x, new_y):get_character() then
             Log.trace("Character!")
 
-            return false
+            local target = data.map:get_grid():get_cell(new_x, new_y):get_character()
+
+            return ActionResult({succeeded = true, alternate = FightAction({target = target})})
         else
             data.map:move_cahracter(cur_x, cur_y, new_x, new_y)
 
-            return true
+            return ActionResult({succeeded = true, alternate = nil})
         end
     else
         Log.trace("Obstacle!")
@@ -65,7 +69,7 @@ function MoveAction:perform(data)
         data.event_manager:fireEvent(ShowEffectEvent({type = EffectTypes.no_path, x = new_x, y = new_y}))
     end
 
-    return false
+    return ActionResult({succeeded = false, alternate = nil})
 end
 
 return MoveAction

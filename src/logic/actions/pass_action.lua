@@ -1,6 +1,7 @@
 local class = require "middleclass"
 
 local BasicAction = require "logic.actions.basic_action"
+local ActionResult = require "logic.actions.action_result"
 
 local Actions = require "enums.actions"
 
@@ -16,7 +17,7 @@ end
 function PassAction:perform(data)
     Log.trace("PASS!")
 
-    return true
+    return ActionResult({succeeded = true, alternate = nil})
 end
 
 return PassAction

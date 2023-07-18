@@ -73,6 +73,14 @@ function DrawHandler:draw_map(data)
                             )
                         end
 
+                        if cell:get_bones() then
+                            self.tc:draw(
+                                Cells.bones,
+                                (x - 1) * self.cell_size + self.shift_x,
+                                (y - 1) * self.cell_size + self.shift_y
+                            )
+                        end
+
                         if not cell:is_visible() then
                             self.tc:draw(
                                 Cells.shadow,
@@ -130,6 +138,9 @@ function DrawHandler:draw_ui(data)
     ui_canvas:renderTo(function()
         love.graphics.clear()
 
+        local hero_hp = hero:get_hp()
+        local hero_attacks = hero:get_attacks()
+
         local ui_panel_width = (width - (self.radius_x * 2 + 1) * self.cell_size) - 20
 
         love.graphics.rectangle(
@@ -163,14 +174,62 @@ function DrawHandler:draw_ui(data)
             self.cell_size
         )
 
-        -- hero conditions
-        local hero_hp = hero:get_hp()
+        love.graphics.setColor(Colors.white)
+        love.graphics.print(
+            math.floor(hero_hp.max/hero_hp.cur) * 100 .. "%",
+            (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2,
+            (self.cell_size * 3) + 12 + self.cell_size * 4
+        )
 
+        -- helmet preview
+        love.graphics.rectangle(
+            "line",
+            (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2,
+            (self.cell_size * 3) + 12 + self.cell_size,
+            self.cell_size,
+            self.cell_size
+        )
+
+        -- armor preview
+        love.graphics.rectangle(
+            "line",
+            (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2,
+            (self.cell_size * 3) + 12 + self.cell_size * 5,
+            self.cell_size,
+            self.cell_size
+        )
+
+        -- left hand preview
+        love.graphics.rectangle(
+            "line",
+            (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2 - self.cell_size * 2,
+            (self.cell_size * 3) + 12 + self.cell_size * 3,
+            self.cell_size,
+            self.cell_size
+        )
+
+        -- right hand preview
+        love.graphics.rectangle(
+            "line",
+            (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2 + self.cell_size * 2,
+            (self.cell_size * 3) + 12 + self.cell_size * 3,
+            self.cell_size,
+            self.cell_size
+        )
+
+        -- hero conditions
         love.graphics.setColor(Colors.red)
         love.graphics.print(
             "HP: " .. hero_hp.cur .. "/" .. hero_hp.max,
             (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
-            (self.cell_size * 3) + 12 + self.cell_size * 7
+            (self.cell_size * 3) + 12 + self.cell_size * 8
+        )
+
+        love.graphics.setColor(Colors.orange)
+        love.graphics.print(
+            "Attack: " .. hero_attacks.min .. " - " .. hero_attacks.max,
+            (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
+            (self.cell_size * 3) + 12 + self.cell_size * 8.5
         )
     end)
 end
