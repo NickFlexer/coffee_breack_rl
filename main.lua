@@ -20,6 +20,7 @@ local AISystem = require "systems.ai_system"
 local UpdateViewEvent = require "events.update_view_event"
 local GenerateMapEvent = require "events.generate_map_event"
 local SolveFovEvent = require "events.solve_fov_event"
+local ScreenLogEvent = require "events.screen_log_event"
 
 local MapType = require "enums.map_type"
 
@@ -50,6 +51,7 @@ function love.load()
 
     event_manager:addListener("UpdateViewEvent", view_system, view_system.handle_event)
     event_manager:addListener("ShowEffectEvent", view_system, view_system.handle_event)
+    event_manager:addListener("ScreenLogEvent", view_system, view_system.handle_event)
     event_manager:addListener("SolveFovEvent", map, map.handle_event)
     event_manager:addListener("GenerateMapEvent", map, map.handle_event)
     event_manager:addListener("HeroActionEvent", hero, hero.handle_event)
@@ -57,6 +59,7 @@ function love.load()
     event_manager:fireEvent(GenerateMapEvent(MapType.mushroom_forest))
     event_manager:fireEvent(SolveFovEvent())
     event_manager:fireEvent(UpdateViewEvent())
+    event_manager:fireEvent(ScreenLogEvent("Добро пожаловать!"))
 
     Log.debug("Load end")
 end

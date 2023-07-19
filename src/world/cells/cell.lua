@@ -67,4 +67,14 @@ function Cell:set_visible(visible)
     self.visible = visible
 end
 
+function Cell:get_message()
+    local message = nil
+
+    if self.bones then
+        message = "Тут лежат кости твоих врагов"
+    end
+
+    return message
+end
+
 return Cell

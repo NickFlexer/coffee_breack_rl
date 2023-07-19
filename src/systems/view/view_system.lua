@@ -10,6 +10,7 @@ local EffectTypes = require "enums.effect_types"
 
 local UpdateViewEvent = require "events.update_view_event"
 local ShowEffectEvent = require "events.show_effect_event"
+local ScreenLogEvent = require "events.screen_log_event"
 
 
 local ViewSystem = class("ViewSystem", System)
@@ -39,6 +40,8 @@ function ViewSystem:initialize(data)
 
     self.map_canvas = love.graphics.newCanvas()
     self.ui_canvas = love.graphics.newCanvas()
+    self.log_canvas = love.graphics.newCanvas()
+
     self.tc = TileCutter("res/tileset/fantasy-tileset-3.png", self.cell_size)
     self.tc:config_tileset(
         {
@@ -77,6 +80,7 @@ function ViewSystem:draw()
     love.graphics.setColor(1, 1, 1);
     love.graphics.draw(self.map_canvas)
     love.graphics.draw(self.ui_canvas)
+    love.graphics.draw(self.log_canvas)
 end
 
 function ViewSystem:requires()
@@ -127,6 +131,11 @@ function ViewSystem:handle_event(event)
                 end
             )
         end
+    elseif event.class.name == ScreenLogEvent.name then
+        self.draw_handler:draw_log({
+            log_canvas = self.log_canvas,
+            new_msg = event:get_message()
+        })
     end
 end
 

@@ -16,6 +16,8 @@ function DrawHandler:initialize(data)
 
     self.font = love.graphics.newFont("res/fonts/keyrusMedium.ttf", 18)
     love.graphics.setFont(self.font)
+
+    self.screen_log = {}
 end
 
 function DrawHandler:draw_map(data)
@@ -231,6 +233,43 @@ function DrawHandler:draw_ui(data)
             (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
             (self.cell_size * 3) + 12 + self.cell_size * 8.5
         )
+    end)
+end
+
+function DrawHandler:draw_log(data)
+    local log_canvas = data.log_canvas
+    local new_msg = data.new_msg
+
+    local width, height = love.graphics.getDimensions()
+
+    table.insert(self.screen_log, new_msg)
+
+    if #self.screen_log > 6 then
+        table.remove(self.screen_log, 1)
+    end
+
+    log_canvas:renderTo(function()
+        love.graphics.clear()
+
+        love.graphics.setColor(Colors.white)
+        love.graphics.rectangle(
+            "line",
+            4,
+            (self.radius_y * 2 + 1) * self.cell_size + 16,
+            (self.radius_x * 2 + 1) * self.cell_size + 8,
+            (height - (self.radius_y * 2 + 1) * self.cell_size + 8) - 32
+        )
+
+        local log_position_y = (self.radius_y * 2 + 1) * self.cell_size + 20    
+
+        for index, msg in ipairs(self.screen_log) do
+            love.graphics.print(
+                msg,
+                16,
+                log_position_y + (index - 1) * 16
+            )
+            love.graphics.setColor(Colors.white)
+        end
     end)
 end
 
