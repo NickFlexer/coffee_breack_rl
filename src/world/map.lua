@@ -4,6 +4,7 @@ local Ring = require "ringer"
 
 local FOV = require "ppfov"
 local Luastar = require "lua-star"
+local Bresenham = require "Bresenham"
 
 local GenerateMapEvent = require "events.generate_map_event"
 local SolveFovEvent = require "events.solve_fov_event"
@@ -15,8 +16,11 @@ local MapType = require "enums.map_type"
 local cells = require "enums.cells"
 
 local Rabbit = require "world.units.rabbit"
+local Zombie = require "world.units.zombie"
 
+local DummyAI = require "logic.ai.dummy"
 local RabbitAI = require "logic.ai.rabbit_ai"
+local ZombieAI = require "logic.ai.zombie_ai"
 
 
 local Map = class("Map")
@@ -69,10 +73,11 @@ function Map:handle_event(event)
                 local cur_cell = self.world_map:get_cell(pos_x, pos_y)
 
                 if cur_cell:get_name() == cells.ground and not cur_cell:get_character() then
-                    local rabbit = Rabbit({ai = RabbitAI(), hp = 4})
+                    -- local unit = Rabbit({ai = RabbitAI(), hp = 4, view_radius = 8})
+                    local unit = Zombie({ai = ZombieAI(), hp = 10, attack = {min = 1, max = 4}, view_radius = 8})
 
-                    self.world_map:get_cell(pos_x, pos_y):set_character(rabbit)
-                    self.characters:insert(rabbit)
+                    self.world_map:get_cell(pos_x, pos_y):set_character(unit)
+                    self.characters:insert(unit)
 
                     break
                 end
@@ -98,8 +103,9 @@ function Map:handle_event(event)
         end
 
         local hero_x, hero_y = self:get_character_position(self.hero)
+        local hero_view_radius = self.hero:get_view_radius()
 
-        FOV(hero_x, hero_y, 8, is_transparent, on_visible)
+        FOV(hero_x, hero_y, hero_view_radius, is_transparent, on_visible)
     end
 end
 
@@ -151,20 +157,74 @@ end
 
 function Map:solve_path(x0, y0, x1, y1)
     local path = Luastar:find(
-        self.map_size_y,
         self.map_size_x,
+        self.map_size_y,
         {x = x0, y = y0},
         {x = x1, y = y1},
         function (x, y)
-            local result = (self:can_move(x, y) and (not self.world_map:get_cell(x, y):get_character()))
+            local pos_result = not self.world_map:get_cell(x, y):get_character()
+
+            if x == x1 and y == y1 then
+                if self.world_map:get_cell(x, y):get_character() == self:get_hero() then
+                    pos_result = true
+                end
+            end
+
+            local result = (self:can_move(x, y) and pos_result)
 
             return result
         end,
-        true,
+        false,
         true
     )
 
+    if path then
+        table.remove(path, 1)
+    end
+
     return path
+end
+
+function Map:can_see(source, target)
+    local source_x, source_y = self:get_character_position(source)
+    local target_x, target_y = self:get_character_position(target)
+    local source_view_radius = source:get_view_radius()
+
+    local function callback(x, y)
+        return self.world_map:get_cell(x, y):is_transparent()
+    end
+
+    local result, counter = Bresenham.line(
+        source_x, source_y,
+        target_x, target_y,
+        callback
+    )
+
+    if result and counter <= source_view_radius then
+        return true
+    end
+
+    return false
+end
+
+function Map:is_character_near(source, target)
+    local source_x, source_y = self:get_character_position(source)
+    local target_x, target_y = self:get_character_position(target)
+
+    local neighbours = {
+        {-1, 0},
+        {1, 0},
+        {0, -1},
+        {0, 1}
+    }
+
+    for _, data in ipairs(neighbours) do
+        if source_x - target_x == data[1] and source_y - target_y == data[2] then
+            return true
+        end
+    end
+
+    return false
 end
 
 return Map

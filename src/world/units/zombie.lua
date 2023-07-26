@@ -6,30 +6,35 @@ local Cells = require "enums.cells"
 local CharacterControl = require "enums.character_control"
 
 
-local Rabbit = class("Rabbit", Character)
+local Zombie = class("Zombie", Character)
 
-function Rabbit:initialize(data)
+function Zombie:initialize(data)
     Character:initialize(self)
 
-    self.tile = Cells.rabbit
+    self.tile = Cells.zombie
     self.control = CharacterControl.ai
 
     if not data.ai then
-        error("Rabbit:initialize no data.ai !")
+        error("Zombie:initialize no data.ai !")
     end
 
     if not data.hp then
-        error("Hero:initializ: no data.hp !")
+        error("Zombie:initializ: no data.hp !")
     end
 
     if not data.view_radius then
-        error("Hero:initializ: no data.view_radius !")
+        error("Zombie:initializ: no data.view_radius !")
+    end
+
+    if not data.attack then
+        error("Hero:initializ: no data.attack !")
     end
 
     self.ai = data.ai
     self.max_hp = data.hp
     self.current_hp = data.hp
     self.view_radius = data.view_radius
+    self.attack = data.attack
 end
 
-return Rabbit
+return Zombie

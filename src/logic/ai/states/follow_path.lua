@@ -29,16 +29,19 @@ function FollowPathState:execute(owner, data)
 
     local path = owner:get_path()
 
-    Log.trace("POSITION " .. cur_x, cur_y)
-    Log.trace("PATH " .. path[2].x, path[2].y)
+    if not path then
+        owner:get_fsm():revent_to_previous_state()
 
-    if data.map:get_grid():get_cell(path[2].x, path[2].y):get_character() then
-        owner:get_fsm():change_state(owner:get_states().careless)
+        return
+    end
+
+    if data.map:get_grid():get_cell(path[1].x, path[1].y):get_character() then
+        owner:get_fsm():revent_to_previous_state()
     else
-        local moving = data.character:get_moving_direction(cur_x, cur_y, path[2].x, path[2].y)
+        local moving = data.character:get_moving_direction(cur_x, cur_y, path[1].x, path[1].y)
 
         if not moving then
-            owner:get_fsm():change_state(owner:get_states().careless)
+            owner:get_fsm():revent_to_previous_state()
 
             return
         end
@@ -48,10 +51,11 @@ function FollowPathState:execute(owner, data)
         Log.trace("STEP")
     end
 
-    table.remove(path, 2)
+    table.remove(path, 1)
 
-    if #path == 1 then
-        owner:get_fsm():change_state(owner:get_states().careless)
+    if #path < 1 then
+        owner:set_path(nil)
+        owner:get_fsm():revent_to_previous_state()
 
         return
     end

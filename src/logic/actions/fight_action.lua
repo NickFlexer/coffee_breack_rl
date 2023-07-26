@@ -18,7 +18,7 @@ function FightAction:initialize(data)
     BasicAction:initialize(self)
 
     if not data.target then
-        error("MoveAction:perform NO data.target!")
+        error("FightAction:perform NO data.target!")
     end
 
     self.target = data.target
@@ -29,11 +29,11 @@ function FightAction:perform(data)
     Log.trace("FIGHT!")
 
     if not data.actor then
-        error("MoveAction:perform NO data.actor!")
+        error("FightAction:perform NO data.actor!")
     end
 
     if not data.map then
-        error("MoveAction:perform NO data.map!")
+        error("FightAction:perform NO data.map!")
     end
 
     local x, y = data.map:get_character_position(self.target)
@@ -49,21 +49,26 @@ function FightAction:perform(data)
             ". " .. self.target.class.name .. " is dead!"
         )
 
-        if data.actor:get_control() == CharacterControl.player then
-            data.event_manager:fireEvent(
-                ScreenLogEvent(
-                    {
-                        Colors.red, data.actor.class.name,
-                        Colors.white, " бьет ",
-                        Colors.red, self.target.class.name,
-                        Colors.white, " и вности урон ",
-                        Colors.orange, actor_attack,
-                        Colors.white, ". ",
-                        Colors.red, self.target.class.name,
-                        Colors.white, " мертв!"
-                    }
-                )
+        data.event_manager:fireEvent(
+            ScreenLogEvent(
+                {
+                    Colors.red, data.actor.class.name,
+                    Colors.white, " бьет ",
+                    Colors.red, self.target.class.name,
+                    Colors.white, " и вносит урон ",
+                    Colors.orange, actor_attack,
+                    Colors.white, ". ",
+                    Colors.red, self.target.class.name,
+                    Colors.white, " мертв!"
+                }
             )
+        )
+
+        if self.target:get_control() == CharacterControl.player then
+            Log.debug("Player is dead!!")
+            love.event.quit()
+
+            return ActionResult({succeeded = false, alternate = nil})
         end
 
         data.map:kill_character(self.target)
@@ -72,22 +77,20 @@ function FightAction:perform(data)
             ". " .. self.target.class.name .. " is still alive!"
         )
 
-        if data.actor:get_control() == CharacterControl.player then
-            data.event_manager:fireEvent(
-                ScreenLogEvent(
-                    {
-                        Colors.red, data.actor.class.name,
-                        Colors.white, " бьет ",
-                        Colors.red, self.target.class.name,
-                        Colors.white, " и вности урон ",
-                        Colors.orange, actor_attack,
-                        Colors.white, ". Но ",
-                        Colors.red, self.target.class.name,
-                        Colors.white, " все еще жив!"
-                    }
-                )
+        data.event_manager:fireEvent(
+            ScreenLogEvent(
+                {
+                    Colors.red, data.actor.class.name,
+                    Colors.white, " бьет ",
+                    Colors.red, self.target.class.name,
+                    Colors.white, " и вносит урон ",
+                    Colors.orange, actor_attack,
+                    Colors.white, ". Но ",
+                    Colors.red, self.target.class.name,
+                    Colors.white, " все еще жив!"
+                }
             )
-        end
+        )
     end
 
     return ActionResult({succeeded = true, alternate = nil})

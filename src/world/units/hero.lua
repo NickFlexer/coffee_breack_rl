@@ -24,9 +24,14 @@ function Hero:initialize(data)
         error("Hero:initializ: no data.attack !")
     end
 
+    if not data.view_radius then
+        error("Hero:initializ: no data.view_radius !")
+    end
+
     self.max_hp = data.hp
     self.current_hp = data.hp
     self.attack = data.attack
+    self.view_radius = data.view_radius
 
     self.tile = Cells.barbarian
     self.control = CharacterControl.player

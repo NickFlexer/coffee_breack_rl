@@ -178,7 +178,7 @@ function DrawHandler:draw_ui(data)
 
         love.graphics.setColor(Colors.white)
         love.graphics.print(
-            math.floor(hero_hp.max/hero_hp.cur) * 100 .. "%",
+            math.floor(hero_hp.cur/hero_hp.max * 100) .. "%",
             (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2,
             (self.cell_size * 3) + 12 + self.cell_size * 4
         )
@@ -233,6 +233,7 @@ function DrawHandler:draw_ui(data)
             (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
             (self.cell_size * 3) + 12 + self.cell_size * 8.5
         )
+        love.graphics.setColor(Colors.white)
     end)
 end
 

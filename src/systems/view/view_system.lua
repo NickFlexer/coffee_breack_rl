@@ -50,6 +50,7 @@ function ViewSystem:initialize(data)
 
             {cells.barbarian, 3, 19},
             {cells.rabbit, 2, 21},
+            {cells.zombie, 2, 23},
 
             {cells.shadow, 4, 1},
 
@@ -121,12 +122,10 @@ function ViewSystem:handle_event(event)
 
             table.insert(self.effects, {cell = cells.fight, x = x, y = y})
 
-            local effect_index = #self.effects
-
             self.timer:after(
                 0.1,
                 function()
-                    table.remove(self.effects, effect_index)
+                    table.remove(self.effects, 1)
                     self.event_manager:fireEvent(UpdateViewEvent())
                 end
             )

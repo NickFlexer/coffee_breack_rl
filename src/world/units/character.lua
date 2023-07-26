@@ -13,6 +13,7 @@ function Character:initialize(data)
     self.max_hp = nil
     self.current_hp = nil
     self.attack = {min = 0, max = 0}
+    self.view_radius = nil
 end
 
 function Character:get_tile()
@@ -53,6 +54,10 @@ end
 
 function Character:decreace_hp(attack)
     self.current_hp = math.max(self.current_hp - attack, 0)
+end
+
+function Character:get_view_radius()
+    return self.view_radius
 end
 
 function Character:is_dead()

@@ -7,6 +7,7 @@ local Cells = {
     barbarian = "BARBARIAN",
 
     rabbit = "RABBIT",
+    zombie = "ZOMBIE",
 
     shadow = "SHADOW",
 
