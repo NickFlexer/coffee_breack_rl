@@ -7,6 +7,8 @@ local MovingDirection = require "enums.moving_direction"
 
 local Actions = require "enums.actions"
 
+local ExitMenuEvent = require "game.game_events.exit_menu_event"
+
 
 local InputSystem = class("InputSystem", System)
 
@@ -17,17 +19,24 @@ function InputSystem:initialize(data)
         error("InputSystem:initialize NO data.event_manager!")
     end
 
+    if not data.game_event_manager then
+        error("InputSystem:initialize NO data.game_event_manager!")
+    end
+
     self.event_manager = data.event_manager
+    self.game_event_manager = data.game_event_manager
 
     self.input = Input()
 
     self.buttons = {
-        {"w", MovingDirection.up},
-        {"s", MovingDirection.down},
-        {"a", MovingDirection.left},
-        {"d", MovingDirection.right},
+        {"w", "UP", function () self.event_manager:fireEvent(HeroActionEvent(MovingDirection.up)) end},
+        {"s", "DOWN", function () self.event_manager:fireEvent(HeroActionEvent(MovingDirection.down)) end},
+        {"a", "LEFT", function () self.event_manager:fireEvent(HeroActionEvent(MovingDirection.left)) end},
+        {"d", "RIGHT", function () self.event_manager:fireEvent(HeroActionEvent(MovingDirection.right)) end},
 
-        {"p", Actions.pass}
+        {"p", "PASS", function () self.event_manager:fireEvent(HeroActionEvent(Actions.pass)) end},
+
+        {"escape", "ESC", function () self.game_event_manager:fireEvent(ExitMenuEvent()) end}
     }
 
     for _, button in ipairs(self.buttons) do
@@ -38,7 +47,7 @@ end
 function InputSystem:update(dt)
     for _, button in ipairs(self.buttons) do
         if self.input:down(button[2], 0.5) then
-            self.event_manager:fireEvent(HeroActionEvent(button[2]))
+            button[3]()
 
             return
         end

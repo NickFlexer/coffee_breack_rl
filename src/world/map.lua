@@ -6,7 +6,6 @@ local FOV = require "ppfov"
 local Luastar = require "lua-star"
 local Bresenham = require "Bresenham"
 
-local GenerateMapEvent = require "events.generate_map_event"
 local SolveFovEvent = require "events.solve_fov_event"
 
 local Ground = require "world.cells.ground"
@@ -45,45 +44,63 @@ function Map:get_grid()
     return self.world_map
 end
 
-function Map:handle_event(event)
-    if event.class.name == GenerateMapEvent.name then
-        if event:get_map_type() == MapType.mushroom_forest then
-            math.randomseed(os.time())
+function Map:generate(map_type)
+    if not map_type then
+        error("Map:generate No map_type!")
+    end
 
-            for x, y, cell in self.world_map:iterate() do
-                if math.random(100) <= 19 then
-                    self.world_map:set_cell(x, y, Mushroom())
-                end
+    if self.hero:is_dead() then
+        self.hero:restore_hp()
+    end
+
+    for x, y, cell in self.world_map:iterate() do
+        self.world_map:set_cell(x, y, Ground())
+    end
+
+    self.characters = Ring()
+    self.characters:insert(self.hero)
+
+
+    if map_type == MapType.mushroom_forest then
+        for x, y, cell in self.world_map:iterate() do
+            if math.random(100) <= 19 then
+                self.world_map:set_cell(x, y, Mushroom())
             end
         end
+    end
 
+    while true do
+        local pos_x, pos_y = math.random(self.map_size_x), math.random(self.map_size_y)
+
+        if self.world_map:get_cell(pos_x, pos_y):get_name() == cells.ground then
+            self.world_map:get_cell(pos_x, pos_y):set_character(self.hero)
+
+            break
+        end
+    end
+
+    for i = 1, 1 do
         while true do
             local pos_x, pos_y = math.random(self.map_size_x), math.random(self.map_size_y)
+            local cur_cell = self.world_map:get_cell(pos_x, pos_y)
 
-            if self.world_map:get_cell(pos_x, pos_y):get_name() == cells.ground then
-                self.world_map:get_cell(pos_x, pos_y):set_character(self.hero)
+            if cur_cell:get_name() == cells.ground and not cur_cell:get_character() then
+                -- local unit = Rabbit({ai = RabbitAI(), hp = 4, view_radius = 8})
+                local unit = Zombie({ai = ZombieAI(), hp = 10, attack = {min = 1, max = 4}, view_radius = 8})
+
+                self.world_map:get_cell(pos_x, pos_y):set_character(unit)
+                self.characters:insert(unit)
 
                 break
             end
         end
+    end
 
-        for i = 1, 1 do
-            while true do
-                local pos_x, pos_y = math.random(self.map_size_x), math.random(self.map_size_y)
-                local cur_cell = self.world_map:get_cell(pos_x, pos_y)
+    return true
+end
 
-                if cur_cell:get_name() == cells.ground and not cur_cell:get_character() then
-                    -- local unit = Rabbit({ai = RabbitAI(), hp = 4, view_radius = 8})
-                    local unit = Zombie({ai = ZombieAI(), hp = 10, attack = {min = 1, max = 4}, view_radius = 8})
-
-                    self.world_map:get_cell(pos_x, pos_y):set_character(unit)
-                    self.characters:insert(unit)
-
-                    break
-                end
-            end
-        end
-    elseif event.class.name == SolveFovEvent.name then
+function Map:handle_event(event)
+    if event.class.name == SolveFovEvent.name then
         self:reset_visible()
 
         local is_transparent = function (x, y)

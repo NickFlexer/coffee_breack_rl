@@ -10,6 +10,7 @@ local Colors = require "enums.colors"
 
 local ShowEffectEvent = require "events.show_effect_event"
 local ScreenLogEvent = require "events.screen_log_event"
+local HeroDeadEvent = require "events.hero_dead_event"
 
 
 local FightAction = class("FightAction", BasicAction)
@@ -66,7 +67,7 @@ function FightAction:perform(data)
 
         if self.target:get_control() == CharacterControl.player then
             Log.debug("Player is dead!!")
-            love.event.quit()
+            data.event_manager:fireEvent(HeroDeadEvent())
 
             return ActionResult({succeeded = false, alternate = nil})
         end

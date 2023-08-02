@@ -64,6 +64,10 @@ function Character:is_dead()
     return self.current_hp == 0
 end
 
+function Character:restore_hp()
+    self.current_hp = self.max_hp
+end
+
 function Character:get_moving_direction(x0, y0, x1, y1)
     if x0 == x1 + 1 and y0 == y1 then
         return MovingDirection.left
