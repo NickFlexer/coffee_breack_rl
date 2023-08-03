@@ -59,7 +59,9 @@ function GameplayState:init()
         {event_manager = self.event_manager, game_event_manager = self.game_event_manager}), "update"
     )
     self.engine:addSystem(AISystem({map = self.map}), "update")
-    self.engine:addSystem(GameLoopSystem({map = self.map, event_manager = self.event_manager}), "update")
+    self.engine:addSystem(GameLoopSystem(
+        {map = self.map, event_manager = self.event_manager, game_event_manager = self.game_event_manager}), "update"
+    )
     self.engine:addSystem(view_system, "draw")
 
     self.event_manager:addListener("UpdateViewEvent", view_system, view_system.handle_event)

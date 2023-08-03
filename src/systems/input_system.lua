@@ -36,6 +36,7 @@ function InputSystem:initialize(data)
 
         {"p", "PASS", function () self.event_manager:fireEvent(HeroActionEvent(Actions.pass)) end},
 
+        {"return", "ENTER", function () self.event_manager:fireEvent(HeroActionEvent(Actions.interaction)) end},
         {"escape", "ESC", function () self.game_event_manager:fireEvent(ExitMenuEvent()) end}
     }
 

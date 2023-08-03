@@ -9,6 +9,7 @@ local CharacterControl = require "enums.character_control"
 
 local MoveAction = require "logic.actions.move_action"
 local PassAction = require "logic.actions.pass_action"
+local InteractionAction = require "logic.actions.interaction_action"
 
 
 local Hero = class("Hero", Character)
@@ -64,6 +65,14 @@ function Hero:handle_event(event)
 
     if event:get_action_type() == Actions.pass then
         self:set_action(PassAction())
+
+        return
+    end
+
+    if event:get_action_type() == Actions.interaction then
+        self:set_action(InteractionAction())
+
+        return
     end
 end
 

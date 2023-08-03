@@ -10,6 +10,7 @@ local SolveFovEvent = require "events.solve_fov_event"
 
 local Ground = require "world.cells.ground"
 local Mushroom = require "world.cells.mushroom"
+local Stairs = require "world.cells.stairs"
 
 local MapType = require "enums.map_type"
 local cells = require "enums.cells"
@@ -74,6 +75,18 @@ function Map:generate(map_type)
 
         if self.world_map:get_cell(pos_x, pos_y):get_name() == cells.ground then
             self.world_map:get_cell(pos_x, pos_y):set_character(self.hero)
+
+            break
+        end
+    end
+
+    while true do
+        local pos_x, pos_y = math.random(self.map_size_x), math.random(self.map_size_y)
+
+        local cell = self.world_map:get_cell(pos_x, pos_y)
+
+        if cell:get_name() == cells.ground and not cell:get_character() then
+            self.world_map:set_cell(pos_x, pos_y, Stairs())
 
             break
         end

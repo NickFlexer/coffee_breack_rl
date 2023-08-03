@@ -17,9 +17,14 @@ function GameLoopSystem:initialize(data)
         error("GameLoopSystem:initialize NO data.event_manager!")
     end
 
+    if not data.game_event_manager then
+        error("GameLoopSystem:initialize NO data.game_event_manager!")
+    end
+
     self.map = data.map
     self.event_manager = data.event_manager
     self.still_playing = true
+    self.game_event_manager = data.game_event_manager
 end
 
 function GameLoopSystem:update(dt)
@@ -32,7 +37,9 @@ function GameLoopSystem:update(dt)
     end
 
     while true do
-        local result = action:perform({actor = actor, map = self.map, event_manager = self.event_manager})
+        local result = action:perform(
+            {actor = actor, map = self.map, event_manager = self.event_manager, game_event_manager = self.game_event_manager}
+        )
 
         Log.debug("ACTOR " .. actor.class.name)
 

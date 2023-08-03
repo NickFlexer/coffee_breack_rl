@@ -47,6 +47,7 @@ function ViewSystem:initialize(data)
         {
             {cells.wall, 2, 2},
             {cells.mushroom, 1, 21},
+            {cells.stairs, 6, 2},
 
             {cells.barbarian, 3, 19},
             {cells.rabbit, 2, 21},
