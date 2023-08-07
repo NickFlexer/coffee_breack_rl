@@ -26,15 +26,20 @@ function Zombie:initialize(data)
         error("Zombie:initializ: no data.view_radius !")
     end
 
-    if not data.attack then
-        error("Hero:initializ: no data.attack !")
+    if not data.damage then
+        error("Zombie:initializ: no data.damage !")
+    end
+
+    if not data.speed then
+        error("Zombie:initializ: no data.speed !")
     end
 
     self.ai = data.ai
     self.max_hp = data.hp
     self.current_hp = data.hp
     self.view_radius = data.view_radius
-    self.attack = data.attack
+    self.damage = data.damage
+    self.speed = data.speed
 end
 
 return Zombie

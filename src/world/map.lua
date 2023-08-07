@@ -98,8 +98,8 @@ function Map:generate(map_type)
             local cur_cell = self.world_map:get_cell(pos_x, pos_y)
 
             if cur_cell:get_name() == cells.ground and not cur_cell:get_character() then
-                -- local unit = Rabbit({ai = RabbitAI(), hp = 4, view_radius = 8})
-                local unit = Zombie({ai = ZombieAI(), hp = 10, attack = {min = 1, max = 4}, view_radius = 8})
+                -- local unit = Rabbit({ai = RabbitAI(), hp = 4, view_radius = 8, speed = 12})
+                local unit = Zombie({ai = ZombieAI(), hp = 10, damage = {min = 1, max = 4}, view_radius = 8, speed = 6})
 
                 self.world_map:get_cell(pos_x, pos_y):set_character(unit)
                 self.characters:insert(unit)

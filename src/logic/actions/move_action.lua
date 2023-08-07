@@ -19,6 +19,7 @@ function MoveAction:initialize(data)
     BasicAction:initialize(self)
 
     self.type = Actions.move
+    self.cost = 10
 
     if not data.direction then
         error("MoveAction:initialize NO data.direction!")

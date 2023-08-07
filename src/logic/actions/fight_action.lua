@@ -24,6 +24,7 @@ function FightAction:initialize(data)
 
     self.target = data.target
     self.type = Actions.fight
+    self.cost = 10
 end
 
 function FightAction:perform(data)
@@ -41,12 +42,12 @@ function FightAction:perform(data)
 
     data.event_manager:fireEvent(ShowEffectEvent({type = EffectTypes.fight, x = x, y = y}))
 
-    local actor_attack = data.actor:new_attack()
+    local actor_damage = data.actor:new_damage()
 
-    self.target:decreace_hp(actor_attack)
+    self.target:decreace_hp(actor_damage)
 
     if self.target:is_dead() then
-        Log.trace(data.actor.class.name .." hit " .. self.target.class.name .." and caused damage " .. actor_attack ..
+        Log.trace(data.actor.class.name .." hit " .. self.target.class.name .." and caused damage " .. actor_damage ..
             ". " .. self.target.class.name .. " is dead!"
         )
 
@@ -57,7 +58,7 @@ function FightAction:perform(data)
                     Colors.white, " бьет ",
                     Colors.red, self.target.class.name,
                     Colors.white, " и вносит урон ",
-                    Colors.orange, actor_attack,
+                    Colors.orange, actor_damage,
                     Colors.white, ". ",
                     Colors.red, self.target.class.name,
                     Colors.white, " мертв!"
@@ -74,7 +75,7 @@ function FightAction:perform(data)
 
         data.map:kill_character(self.target)
     else
-        Log.trace(data.actor.class.name .." hit " .. self.target.class.name .." and caused damage " .. actor_attack ..
+        Log.trace(data.actor.class.name .." hit " .. self.target.class.name .." and caused damage " .. actor_damage ..
             ". " .. self.target.class.name .. " is still alive!"
         )
 
@@ -85,7 +86,7 @@ function FightAction:perform(data)
                     Colors.white, " бьет ",
                     Colors.red, self.target.class.name,
                     Colors.white, " и вносит урон ",
-                    Colors.orange, actor_attack,
+                    Colors.orange, actor_damage,
                     Colors.white, ". Но ",
                     Colors.red, self.target.class.name,
                     Colors.white, " все еще жив!"

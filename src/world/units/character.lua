@@ -12,8 +12,10 @@ function Character:initialize(data)
     self.ai = nil
     self.max_hp = nil
     self.current_hp = nil
-    self.attack = {min = 0, max = 0}
+    self.damage = {min = 0, max = 0}
     self.view_radius = nil
+    self.speed = nil
+    self.energy = 0
 end
 
 function Character:get_tile()
@@ -29,7 +31,21 @@ function Character:get_action()
     local action =  self.action
     self.action = nil
 
+    self.energy = self.energy - action:get_cost()
+
     return action
+end
+
+function Character:has_action()
+    return not not self.action
+end
+
+function Character:can_take_turn()
+    return self.energy >= self.action:get_cost()
+end
+
+function Character:gain_energy()
+    self.energy = self.energy + self.speed
 end
 
 function Character:get_control()
@@ -44,16 +60,16 @@ function Character:get_hp()
     return {max = self.max_hp, cur = self.current_hp}
 end
 
-function Character:new_attack()
-    return math.random(self.attack.min, self.attack.max)
+function Character:new_damage()
+    return math.random(self.damage.min, self.damage.max)
 end
 
-function Character:get_attacks()
-    return self.attack
+function Character:get_damage()
+    return self.damage
 end
 
-function Character:decreace_hp(attack)
-    self.current_hp = math.max(self.current_hp - attack, 0)
+function Character:decreace_hp(damage)
+    self.current_hp = math.max(self.current_hp - damage, 0)
 end
 
 function Character:get_view_radius()
@@ -66,6 +82,10 @@ end
 
 function Character:restore_hp()
     self.current_hp = self.max_hp
+end
+
+function Character:get_speed()
+    return self.speed
 end
 
 function Character:get_moving_direction(x0, y0, x1, y1)

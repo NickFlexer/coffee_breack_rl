@@ -20,6 +20,7 @@ function InteractionAction:initialize(data)
     BasicAction:initialize(self)
 
     self.type = Actions.interaction
+    self.cost = 10
 end
 
 function InteractionAction:perform(data)

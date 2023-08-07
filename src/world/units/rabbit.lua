@@ -19,17 +19,22 @@ function Rabbit:initialize(data)
     end
 
     if not data.hp then
-        error("Hero:initializ: no data.hp !")
+        error("Rabbit:initializ: no data.hp !")
     end
 
     if not data.view_radius then
-        error("Hero:initializ: no data.view_radius !")
+        error("Rabbit:initializ: no data.view_radius !")
+    end
+
+    if not data.speed then
+        error("Rabbit:initializ: no data.speed !")
     end
 
     self.ai = data.ai
     self.max_hp = data.hp
     self.current_hp = data.hp
     self.view_radius = data.view_radius
+    self.speed = data.speed
 end
 
 return Rabbit

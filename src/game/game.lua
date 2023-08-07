@@ -27,7 +27,7 @@ function Game:initialize(data)
 
     self.game_event_manager = data.event_manager
 
-    local hero = Hero({hp = 10, attack = {min = 1, max = 4}, view_radius = 8})
+    local hero = Hero({hp = 10, damage = {min = 1, max = 4}, view_radius = 8, speed = 10})
     local map = Map({hero = hero})
 
     self.states = {

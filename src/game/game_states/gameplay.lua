@@ -12,7 +12,6 @@ local GenerateWorldState = require "game.game_states.generate_world"
 local ViewSystem = require "src.systems.view.view_system"
 local InputSystem = require "systems.input_system"
 local GameLoopSystem = require "systems.game_loop_system"
-local AISystem = require "systems.ai_system"
 
 local UpdateViewEvent = require "events.update_view_event"
 local SolveFovEvent = require "events.solve_fov_event"
@@ -58,7 +57,6 @@ function GameplayState:init()
     self.engine:addSystem(InputSystem(
         {event_manager = self.event_manager, game_event_manager = self.game_event_manager}), "update"
     )
-    self.engine:addSystem(AISystem({map = self.map}), "update")
     self.engine:addSystem(GameLoopSystem(
         {map = self.map, event_manager = self.event_manager, game_event_manager = self.game_event_manager}), "update"
     )
@@ -80,7 +78,6 @@ function GameplayState:enter(previous)
 
     self.engine:startSystem(ViewSystem.name)
     self.engine:startSystem(InputSystem.name)
-    self.engine:startSystem(AISystem.name)
     self.engine:startSystem(GameLoopSystem.name)
 
     self.event_manager:fireEvent(SolveFovEvent())
@@ -108,7 +105,6 @@ function GameplayState:leave()
 
     self.engine:stopSystem(ViewSystem.name)
     self.engine:stopSystem(InputSystem.name)
-    self.engine:stopSystem(AISystem.name)
     self.engine:stopSystem(GameLoopSystem.name)
 
     self.event_manager:removeListener("HeroDeadEvent", self)

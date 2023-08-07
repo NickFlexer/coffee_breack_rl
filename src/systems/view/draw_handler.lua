@@ -141,7 +141,8 @@ function DrawHandler:draw_ui(data)
         love.graphics.clear()
 
         local hero_hp = hero:get_hp()
-        local hero_attacks = hero:get_attacks()
+        local hero_damage = hero:get_damage()
+        local hero_speed = hero:get_speed()
 
         local ui_panel_width = (width - (self.radius_x * 2 + 1) * self.cell_size) - 20
 
@@ -222,17 +223,25 @@ function DrawHandler:draw_ui(data)
         -- hero conditions
         love.graphics.setColor(Colors.red)
         love.graphics.print(
-            "HP: " .. hero_hp.cur .. "/" .. hero_hp.max,
+            "Жизни: " .. hero_hp.cur .. "/" .. hero_hp.max,
             (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
             (self.cell_size * 3) + 12 + self.cell_size * 8
         )
 
         love.graphics.setColor(Colors.orange)
         love.graphics.print(
-            "Attack: " .. hero_attacks.min .. " - " .. hero_attacks.max,
+            "Урон: " .. hero_damage.min .. " - " .. hero_damage.max,
             (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
             (self.cell_size * 3) + 12 + self.cell_size * 8.5
         )
+
+        love.graphics.setColor(Colors.green)
+        love.graphics.print(
+            "Скорость: " .. hero_speed,
+            (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
+            (self.cell_size * 3) + 12 + self.cell_size * 9
+        )
+
         love.graphics.setColor(Colors.white)
     end)
 end

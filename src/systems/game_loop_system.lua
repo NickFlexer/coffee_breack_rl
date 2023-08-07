@@ -3,6 +3,8 @@ local class = require "middleclass"
 local UpdateViewEvent = require "events.update_view_event"
 local SolveFovEvent = require "events.solve_fov_event"
 
+local CharacterControl = require "enums.character_control"
+
 
 local GameLoopSystem = class("GameLoopSystem", System)
 
@@ -30,10 +32,28 @@ end
 function GameLoopSystem:update(dt)
     local actor = self.map:get_characters():get()
 
-    local action = actor:get_action()
+    local action = nil
 
-    if not action then
-        return
+    while action == nil do
+        actor = self.map:get_characters():get()
+
+        if actor:has_action() then
+            actor:gain_energy()
+
+            if actor:can_take_turn() then
+                action = actor:get_action()
+            end
+
+            self.map:get_characters():next()
+        else
+           if actor:get_control() == CharacterControl.ai then
+                actor:think({character = actor, map = self.map})
+            end
+
+            if actor:get_control() == CharacterControl.player then
+                return
+            end
+        end
     end
 
     while true do
@@ -56,8 +76,6 @@ function GameLoopSystem:update(dt)
 
         action = result:get_alternate()
     end
-
-    self.map:get_characters():next()
 end
 
 function GameLoopSystem:requires()

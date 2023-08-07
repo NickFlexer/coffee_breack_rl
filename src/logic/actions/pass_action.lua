@@ -15,6 +15,7 @@ function PassAction:initialize(data)
     BasicAction:initialize(self)
 
     self.type = Actions.pass
+    self.cost = 10
 end
 
 function PassAction:perform(data)
