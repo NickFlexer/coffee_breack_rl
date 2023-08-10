@@ -22,6 +22,8 @@ local DummyAI = require "logic.ai.dummy"
 local RabbitAI = require "logic.ai.rabbit_ai"
 local ZombieAI = require "logic.ai.zombie_ai"
 
+local ShortSword = require "world.items.short_sword"
+
 
 local Map = class("Map")
 
@@ -89,6 +91,19 @@ function Map:generate(map_type)
             self.world_map:set_cell(pos_x, pos_y, Stairs())
 
             break
+        end
+    end
+
+    for i = 1, 1 do
+        while true do
+            local pos_x, pos_y = math.random(self.map_size_x), math.random(self.map_size_y)
+            local cur_cell = self.world_map:get_cell(pos_x, pos_y)
+
+            if cur_cell:can_place_item() then
+                cur_cell:set_item(ShortSword())
+
+                break
+            end
         end
     end
 

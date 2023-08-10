@@ -13,6 +13,7 @@ function Mushroom:initialize()
     self.move_blocked = true
 
     self.transparent = false
+    self.item_possibility = false
 end
 
 return Mushroom

@@ -8,12 +8,14 @@ local Cell = class("Cell")
 function Cell:initialize()
     self.name = cells.cell
     self.character = nil
+    self.item = nil
     self.bones = false
     self.move_blocked = false
 
     self.obscured = true
     self.visible = false
     self.transparent = true
+    self.item_possibility = false
 end
 
 function Cell:get_name()
@@ -67,11 +69,34 @@ function Cell:set_visible(visible)
     self.visible = visible
 end
 
+function Cell:set_item(item)
+    self.item = item
+end
+
+function Cell:get_item()
+    return self.item
+end
+
+function Cell:remove_item()
+    local item = self.item
+    self.item = nil
+
+    return item
+end
+
+function Cell:can_place_item()
+    return self.item_possibility
+end
+
 function Cell:get_message()
     local message = nil
 
     if self.bones then
         message = "Тут лежат кости твоих врагов"
+    end
+
+    if self.item then
+        message = self.item:get_message()
     end
 
     return message

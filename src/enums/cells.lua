@@ -14,6 +14,8 @@ local Cells = {
 
     bones = "BONES",
 
+    short_sword = "SHORT_SWORD",
+
     no_path = "NO_PATH",
     fight = "FIGHT"
 }

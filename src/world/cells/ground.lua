@@ -13,6 +13,7 @@ function Ground:initialize()
     self.move_blocked = false
 
     self.transparent = true
+    self.item_possibility = true
 end
 
 return Ground

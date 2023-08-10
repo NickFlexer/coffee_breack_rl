@@ -90,6 +90,14 @@ function DrawHandler:draw_map(data)
                                 (y - 1) * self.cell_size + self.shift_y
                             )
                         else
+                            if cell:get_item() then
+                                self.tc:draw(
+                                    cell:get_item():get_tile(),
+                                    (x - 1) * self.cell_size + self.shift_x,
+                                    (y - 1) * self.cell_size + self.shift_y
+                                )
+                            end
+
                             if cell:get_character() then
                                 self.tc:draw(
                                     cell:get_character():get_tile(),

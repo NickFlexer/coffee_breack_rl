@@ -15,6 +15,7 @@ function Stairs:initialize()
     self.move_blocked = false
 
     self.transparent = true
+    self.item_possibility = false
 end
 
 function Stairs:get_message()

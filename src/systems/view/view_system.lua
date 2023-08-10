@@ -57,6 +57,8 @@ function ViewSystem:initialize(data)
 
             {cells.bones, 3, 17},
 
+            {cells.short_sword, 1, 8},
+
             {cells.no_path, 2, 47, 16},
             {cells.fight, 7, 47, 16}
         }
