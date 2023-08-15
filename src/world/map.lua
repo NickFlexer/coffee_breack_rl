@@ -56,6 +56,10 @@ function Map:generate(map_type)
         self.hero:restore_hp()
     end
 
+    for place, item in pairs(self.hero:get_items()) do
+        print(place, item)
+    end
+
     for x, y, cell in self.world_map:iterate() do
         self.world_map:set_cell(x, y, Ground())
     end
@@ -161,6 +165,14 @@ end
 function Map:get_character_position(character)
     for x, y, cell in self.world_map:iterate() do
         if cell:get_character() == character then
+            return x, y
+        end
+    end
+end
+
+function Map:get_item_position(item)
+    for x, y, cell in self.world_map:iterate() do
+        if cell:get_item() == item then
             return x, y
         end
     end

@@ -192,6 +192,8 @@ function DrawHandler:draw_ui(data)
             (self.cell_size * 3) + 12 + self.cell_size * 4
         )
 
+        local hero_items = hero:get_items()
+
         -- helmet preview
         love.graphics.rectangle(
             "line",
@@ -227,6 +229,14 @@ function DrawHandler:draw_ui(data)
             self.cell_size,
             self.cell_size
         )
+
+        if hero_items.right_hand then
+            self.tc:draw(
+                hero_items.right_hand:get_tile(),
+                (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2 + self.cell_size * 2,
+                (self.cell_size * 3) + 12 + self.cell_size * 3
+            )
+        end
 
         -- hero conditions
         love.graphics.setColor(Colors.red)

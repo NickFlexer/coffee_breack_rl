@@ -7,12 +7,14 @@ local StartMenuEvent = require "game.game_events.start_menu_event"
 local ExitMenuEvent = require "game.game_events.exit_menu_event"
 local GenerateWorldEvent = require "game.game_events.generate_world_event"
 local PostMortemEvent = require "game.game_events.post_mortem_event"
+local ItemPreviewEvent = require "game.game_events.item_preview_event"
 
 local GameplayState = require "game.game_states.gameplay"
 local StartMenuState = require "game.game_states.start_menu"
 local ExitMenuState = require "game.game_states.exit_menu"
 local GenerateWorldState = require "game.game_states.generate_world"
 local PostMortemMenuState = require "game.game_states.post_mortem_menu"
+local ItemPreviewMenuState = require "game.game_states.item_preview_menu"
 
 local Map = require "world.map"
 local Hero = require "world.units.hero"
@@ -47,7 +49,14 @@ function Game:initialize(data)
                 hero = hero
             }
         ),
-        post_mortem_menu = PostMortemMenuState({event_manager = self.game_event_manager})
+        post_mortem_menu = PostMortemMenuState({event_manager = self.game_event_manager}),
+        item_preview = ItemPreviewMenuState(
+            {
+                event_manager = self.game_event_manager,
+                hero = hero,
+                map = map
+            }
+        )
     }
 
     Gamestate.registerEvents()
@@ -64,6 +73,8 @@ function Game:handle_event(event)
         Gamestate.switch(self.states.generate_world, event:get_map_type())
     elseif event.class.name == PostMortemEvent.name then
         Gamestate.switch(self.states.post_mortem_menu)
+    elseif event.class.name == ItemPreviewEvent.name then
+        Gamestate.switch(self.states.item_preview, event:get_item())
     end
 end
 

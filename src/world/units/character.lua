@@ -1,6 +1,8 @@
 local class = require "middleclass"
 
 local MovingDirection = require "enums.moving_direction"
+local CharacterAttributes = require "enums.character_attributes"
+local ItemPlace = require "enums.item_place"
 
 
 local Character = class("Character")
@@ -16,6 +18,8 @@ function Character:initialize(data)
     self.view_radius = nil
     self.speed = nil
     self.energy = 0
+
+    self.right_hand = nil
 end
 
 function Character:get_tile()
@@ -61,11 +65,32 @@ function Character:get_hp()
 end
 
 function Character:new_damage()
-    return math.random(self.damage.min, self.damage.max)
+    local damage = self:get_damage()
+
+    return math.random(damage.min, damage.max)
+end
+
+function Character:get_base_damage()
+    return self.damage
 end
 
 function Character:get_damage()
-    return self.damage
+    local result_damage = {min = self.damage.min, max = self.damage.max}
+
+    for place, item in pairs(self:get_items()) do
+        local attributes = item:get_attributes()
+
+        for _, attribute in pairs(attributes) do
+            if attribute == CharacterAttributes.damage then
+                local new_damage = item:get_damage_bust()
+
+                result_damage.min = result_damage.min + new_damage.min
+                result_damage.max = result_damage.max + new_damage.max
+            end
+        end
+    end
+
+    return result_damage
 end
 
 function Character:decreace_hp(damage)
@@ -86,6 +111,26 @@ end
 
 function Character:get_speed()
     return self.speed
+end
+
+function Character:get_items()
+    local items = {
+        right_hand = self.right_hand
+    }
+
+    return items
+end
+
+function Character:set_item(item_place, item)
+    if item_place == ItemPlace.right_hand then
+        self.right_hand = item
+    end
+end
+
+function Character:get_item(item_place)
+    if item_place == ItemPlace.right_hand then
+        return self.right_hand
+    end
 end
 
 function Character:get_moving_direction(x0, y0, x1, y1)
