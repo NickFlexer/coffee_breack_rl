@@ -38,6 +38,7 @@ function Hero:initialize(data)
     self.damage = data.damage
     self.view_radius = data.view_radius
     self.speed = data.speed
+    self.protection_chance = data.protection_chance
 
     self.tile = Cells.barbarian
     self.control = CharacterControl.player

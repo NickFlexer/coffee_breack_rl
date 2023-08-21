@@ -16,6 +16,9 @@ local Cells = {
 
     short_sword = "SHORT_SWORD",
 
+    leather_helmet = "LEATHER_HELMET",
+    leather_jacket = "LEATHER_JACKET",
+
     no_path = "NO_PATH",
     fight = "FIGHT"
 }

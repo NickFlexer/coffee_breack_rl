@@ -18,8 +18,12 @@ function Character:initialize(data)
     self.view_radius = nil
     self.speed = nil
     self.energy = 0
+    self.protection_chance = 0
+    self.defence = 0
 
     self.right_hand = nil
+    self.head = nil
+    self.body = nil
 end
 
 function Character:get_tile()
@@ -70,14 +74,35 @@ function Character:new_damage()
     return math.random(damage.min, damage.max)
 end
 
-function Character:get_base_damage()
-    return self.damage
+function Character:get_preview_damage(new_item)
+    local damage = {min = self.damage.min, max = self.damage.max}
+
+    local items = self:get_items()
+
+    if new_item:get_item_place() == ItemPlace.right_hand then
+        items.right_hand = new_item
+    end
+
+    for _, cur_item in pairs(items) do
+        local attributes = cur_item:get_attributes()
+
+        for _, attribute in pairs(attributes) do
+            if attribute == CharacterAttributes.damage then
+                local new_damage = cur_item:get_damage_bust()
+
+                damage.min = damage.min + new_damage.min
+                damage.max = damage.max + new_damage.max
+            end
+        end
+    end
+
+    return damage
 end
 
 function Character:get_damage()
     local result_damage = {min = self.damage.min, max = self.damage.max}
 
-    for place, item in pairs(self:get_items()) do
+    for _, item in pairs(self:get_items()) do
         local attributes = item:get_attributes()
 
         for _, attribute in pairs(attributes) do
@@ -91,6 +116,52 @@ function Character:get_damage()
     end
 
     return result_damage
+end
+
+function Character:get_protection_chance()
+    return self.protection_chance
+end
+
+function Character:get_defence()
+    local result_defence = self.defence
+
+    for _, item in pairs(self:get_items()) do
+        local attributes = item:get_attributes()
+
+        for _, attribute in pairs(attributes) do
+            if attribute == CharacterAttributes.defence then
+                result_defence = result_defence + item:get_defence_bust()
+            end
+        end
+    end
+
+    return result_defence
+end
+
+function Character:get_preview_defence(new_item)
+    local defence = self.defence
+
+    local items = self:get_items()
+
+    if new_item:get_item_place() == ItemPlace.right_hand then
+        items.right_hand = new_item
+    elseif new_item:get_item_place() == ItemPlace.head then
+        items.head = new_item
+    elseif new_item:get_item_place() == ItemPlace.body then
+        items.body = new_item
+    end
+
+    for _, cur_item in pairs(items) do
+        local attributes = cur_item:get_attributes()
+
+        for _, attribute in pairs(attributes) do
+            if attribute == CharacterAttributes.defence then
+                defence = defence + cur_item:get_defence_bust()
+            end
+        end
+    end
+
+    return defence
 end
 
 function Character:decreace_hp(damage)
@@ -115,7 +186,9 @@ end
 
 function Character:get_items()
     local items = {
-        right_hand = self.right_hand
+        right_hand = self.right_hand,
+        head = self.head,
+        body = self.body
     }
 
     return items
@@ -124,12 +197,20 @@ end
 function Character:set_item(item_place, item)
     if item_place == ItemPlace.right_hand then
         self.right_hand = item
+    elseif item_place == ItemPlace.head then
+        self.head = item
+    elseif item_place == ItemPlace.body then
+        self.body = item
     end
 end
 
 function Character:get_item(item_place)
     if item_place == ItemPlace.right_hand then
         return self.right_hand
+    elseif item_place == ItemPlace.head then
+        return self.head
+    elseif item_place == ItemPlace.body then
+        return self.body
     end
 end
 

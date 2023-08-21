@@ -1,11 +1,14 @@
 local class = require "middleclass"
 
+local Colors = require "enums.colors"
+
 
 local BaseItem = class("BaseItem")
 
 function BaseItem:initialize(data)
-    self.tile = data.tile
-    self.name = data.name
+    self.tile = nil
+    self.name = nil
+    self.visible_name = ""
 
     self.attributes = {}
     self.item_place = nil
@@ -29,6 +32,18 @@ end
 
 function BaseItem:get_item_place()
     return self.item_place
+end
+
+function BaseItem:get_message()
+    local message = {
+        Colors.white, "Тут лежит ",
+        Colors.green, self.visible_name,
+        Colors.white, ". Нажмите ",
+        Colors.orange, "Enter",
+        Colors.white, " чтобы подобрать"
+    }
+
+    return message
 end
 
 return BaseItem

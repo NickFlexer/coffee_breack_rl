@@ -1,6 +1,6 @@
 local class = require "middleclass"
 
-local TileCutter = require "tile_cutter"
+local TileDrawer = require "utils.tile_drawer"
 
 local Colors = require "enums.colors"
 local Cells = require "enums.cells"
@@ -48,13 +48,7 @@ function ItemPreviewMenu:initialize(data)
 
     self.cell_size = 32
 
-    self.tc = TileCutter("res/tileset/fantasy-tileset-3.png", self.cell_size)
-
-    self.tc:config_tileset(
-        {
-            {Cells.short_sword, 1, 8}
-        }
-    )
+    self.tc = TileDrawer()
 end
 
 function ItemPreviewMenu:init()
@@ -68,6 +62,9 @@ function ItemPreviewMenu:enter(previous, item)
 
     self.item = item
 
+    print(self.item)
+    print(self.item:get_item_place())
+
     self.menu_items = {
         {
             text = "Подобрать",
@@ -76,9 +73,7 @@ function ItemPreviewMenu:enter(previous, item)
                 local item_place = self.item:get_item_place()
                 local cur_item = self.hero:get_item(item_place)
 
-                if item_place == ItemPlace.right_hand then
-                    self.hero:set_item(item_place, self.item)
-                end
+                self.hero:set_item(item_place, self.item)
 
                 local pos_x, pos_y = self.map:get_item_position(self.item)
                 self.map:get_grid():get_cell(pos_x, pos_y):remove_item()
@@ -172,6 +167,22 @@ function ItemPreviewMenu:draw()
         else
             current_item_name = current_item:get_visible_name()
         end
+    elseif new_item_place == ItemPlace.head then
+        current_item = self.hero:get_items().head
+
+        if not current_item then
+            current_item_name = "Пустая голова"
+        else
+            current_item_name = current_item:get_visible_name()
+        end
+    elseif new_item_place == ItemPlace.body then
+        current_item = self.hero:get_items().body
+
+        if not current_item then
+            current_item_name = "Голое тело"
+        else
+            current_item_name = current_item:get_visible_name()
+        end
     end
 
     if current_item then
@@ -200,11 +211,7 @@ function ItemPreviewMenu:draw()
 
         if attribute == CharacterAttributes.damage then
             local cur_damage = self.hero:get_damage()
-            local base_damage = self.hero:get_base_damage()
-            local new_damage = {
-                min = base_damage.min + self.item:get_damage_bust().min,
-                max = base_damage.max + self.item:get_damage_bust().max
-            }
+            local new_damage = self.hero:get_preview_damage(self.item)
 
             title_color = Colors.orange
             title = "Урон"
@@ -215,6 +222,22 @@ function ItemPreviewMenu:draw()
                 new_attribute_color = Colors.green
                 current_attribute_color = Colors.red
             elseif new_damage.min < cur_damage.min or new_damage.max < cur_damage.max then
+                new_attribute_color = Colors.red
+                current_attribute_color = Colors.green
+            end
+        elseif attribute == CharacterAttributes.defence then
+            local cur_defence = self.hero:get_defence()
+            local new_defence = self.hero:get_preview_defence(self.item)
+
+            title_color = Colors.orange
+            title = "Защита"
+            new_data = new_defence
+            current_data = cur_defence
+
+            if new_defence > cur_defence then
+                new_attribute_color = Colors.green
+                current_attribute_color = Colors.red
+            elseif new_defence < cur_defence then
                 new_attribute_color = Colors.red
                 current_attribute_color = Colors.green
             end

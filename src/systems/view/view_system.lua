@@ -1,7 +1,8 @@
 local class = require "middleclass"
 
-local TileCutter = require "tile_cutter"
 local Timer = require "hump.timer"
+
+local TileDrawer = require "utils.tile_drawer"
 
 local DrawHandler = require "systems.view.draw_handler"
 
@@ -42,27 +43,7 @@ function ViewSystem:initialize(data)
     self.ui_canvas = love.graphics.newCanvas()
     self.log_canvas = love.graphics.newCanvas()
 
-    self.tc = TileCutter("res/tileset/fantasy-tileset-3.png", self.cell_size)
-    self.tc:config_tileset(
-        {
-            {cells.wall, 2, 2},
-            {cells.mushroom, 1, 21},
-            {cells.stairs, 6, 2},
-
-            {cells.barbarian, 3, 19},
-            {cells.rabbit, 2, 21},
-            {cells.zombie, 2, 23},
-
-            {cells.shadow, 4, 1},
-
-            {cells.bones, 3, 17},
-
-            {cells.short_sword, 1, 8},
-
-            {cells.no_path, 2, 47, 16},
-            {cells.fight, 7, 47, 16}
-        }
-    )
+    self.tc = TileDrawer()
 
     self.effects = {}
 

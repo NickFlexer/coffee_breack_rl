@@ -23,6 +23,8 @@ local RabbitAI = require "logic.ai.rabbit_ai"
 local ZombieAI = require "logic.ai.zombie_ai"
 
 local ShortSword = require "world.items.short_sword"
+local LeatherHelmet = require "world.items.leather_helmet"
+local LeatherJacket = require "world.items.leather_jacket"
 
 
 local Map = class("Map")
@@ -105,6 +107,32 @@ function Map:generate(map_type)
 
             if cur_cell:can_place_item() then
                 cur_cell:set_item(ShortSword())
+
+                break
+            end
+        end
+    end
+
+    for i = 1, 1 do
+        while true do
+            local pos_x, pos_y = math.random(self.map_size_x), math.random(self.map_size_y)
+            local n_cur_cell = self.world_map:get_cell(pos_x, pos_y)
+
+            if n_cur_cell:can_place_item() then
+                n_cur_cell:set_item(LeatherHelmet())
+
+                break
+            end
+        end
+    end
+
+    for i = 1, 1 do
+        while true do
+            local pos_x, pos_y = math.random(self.map_size_x), math.random(self.map_size_y)
+            local n_cur_cell = self.world_map:get_cell(pos_x, pos_y)
+
+            if n_cur_cell:can_place_item() then
+                n_cur_cell:set_item(LeatherJacket())
 
                 break
             end

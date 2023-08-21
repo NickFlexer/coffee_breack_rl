@@ -151,6 +151,8 @@ function DrawHandler:draw_ui(data)
         local hero_hp = hero:get_hp()
         local hero_damage = hero:get_damage()
         local hero_speed = hero:get_speed()
+        local hero_defence = hero:get_defence()
+        local hero_protection_chance = hero:get_protection_chance()
 
         local ui_panel_width = (width - (self.radius_x * 2 + 1) * self.cell_size) - 20
 
@@ -203,6 +205,14 @@ function DrawHandler:draw_ui(data)
             self.cell_size
         )
 
+        if hero_items.head then
+            self.tc:draw(
+                hero_items.head:get_tile(),
+                (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2,
+                (self.cell_size * 3) + 12 + self.cell_size
+            )
+        end
+
         -- armor preview
         love.graphics.rectangle(
             "line",
@@ -211,6 +221,14 @@ function DrawHandler:draw_ui(data)
             self.cell_size,
             self.cell_size
         )
+
+        if hero_items.body then
+            self.tc:draw(
+                hero_items.body:get_tile(),
+                (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2,
+                (self.cell_size * 3) + 12 + self.cell_size * 5
+            )
+        end
 
         -- left hand preview
         love.graphics.rectangle(
@@ -258,6 +276,20 @@ function DrawHandler:draw_ui(data)
             "Скорость: " .. hero_speed,
             (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
             (self.cell_size * 3) + 12 + self.cell_size * 9
+        )
+
+        love.graphics.setColor(Colors.orange)
+        love.graphics.print(
+            "Защита: " .. hero_defence,
+            (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
+            (self.cell_size * 3) + 12 + self.cell_size * 9.5
+        )
+
+        love.graphics.setColor(Colors.white)
+        love.graphics.print(
+            "Шанс защиты: " .. hero_protection_chance .. "%",
+            (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
+            (self.cell_size * 3) + 12 + self.cell_size * 10
         )
 
         love.graphics.setColor(Colors.white)
