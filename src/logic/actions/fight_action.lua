@@ -42,29 +42,99 @@ function FightAction:perform(data)
 
     data.event_manager:fireEvent(ShowEffectEvent({type = EffectTypes.fight, x = x, y = y}))
 
-    local actor_damage = data.actor:new_damage()
+    if math.random(0, 100) > data.actor:get_hit_chance() then
+        data.event_manager:fireEvent(
+            ScreenLogEvent(
+                {
+                    Colors.red, data.actor.class.name,
+                    Colors.white, " промахивается!"
+                }
+            )
+        )
 
-    self.target:decreace_hp(actor_damage)
+        return ActionResult({succeeded = true, alternate = nil})
+    end
+
+    local actor_damage = data.actor:new_damage()
+    local is_crit = false
+
+    if math.random(0, 100) <= data.actor:get_crit_chance() then
+        actor_damage = actor_damage * 2
+        is_crit = true
+    end
+
+    if not is_crit then
+        if math.random(0, 100) <= data.actor:get_protection_chance() then
+            data.event_manager:fireEvent(
+                ScreenLogEvent(
+                    {
+                        Colors.red, data.actor.class.name,
+                        Colors.white, " бьет ",
+                        Colors.red, self.target.class.name,
+                        Colors.white, ". Но ",
+                        Colors.red, self.target.class.name,
+                        Colors.white, " ловко отбивает удар!"
+                    }
+                )
+            )
+
+            return ActionResult({succeeded = true, alternate = nil})
+        end
+    end
+
+    local target_defence = self.target:get_defence()
+    local result_damage = actor_damage - target_defence
+
+    if actor_damage - target_defence < 0 then
+        result_damage = 0
+    end
+
+    self.target:decreace_hp(result_damage)
 
     if self.target:is_dead() then
         Log.trace(data.actor.class.name .." hit " .. self.target.class.name .." and caused damage " .. actor_damage ..
             ". " .. self.target.class.name .. " is dead!"
         )
 
-        data.event_manager:fireEvent(
-            ScreenLogEvent(
-                {
-                    Colors.red, data.actor.class.name,
-                    Colors.white, " бьет ",
-                    Colors.red, self.target.class.name,
-                    Colors.white, " и вносит урон ",
-                    Colors.orange, actor_damage,
-                    Colors.white, ". ",
-                    Colors.red, self.target.class.name,
-                    Colors.white, " мертв!"
-                }
+        if is_crit then
+            data.event_manager:fireEvent(
+                ScreenLogEvent(
+                    {
+                        Colors.red, data.actor.class.name,
+                        Colors.white, " бьет ",
+                        Colors.red, self.target.class.name,
+                        Colors.white, " и вносит урон ",
+                        Colors.orange, actor_damage - target_defence,
+                        Colors.white, ". ",
+                        Colors.white, "Зщита отбила ",
+                        Colors.orange, target_defence,
+                        Colors.white, " урона ",
+                        Colors.red, self.target.class.name,
+                        Colors.white, " мертв!"
+                    }
+                )
             )
-        )
+        else
+            data.event_manager:fireEvent(
+                ScreenLogEvent(
+                    {
+                        Colors.red, data.actor.class.name,
+                        Colors.white, " бьет ",
+                        Colors.red, self.target.class.name,
+                        Colors.white, " и вносит ",
+                        Colors.red, "критический",
+                        Colors.white," урон ",
+                        Colors.orange, actor_damage - target_defence,
+                        Colors.white, ". ",
+                        Colors.white, "Зщита отбила ",
+                        Colors.orange, target_defence,
+                        Colors.white, " урона ",
+                        Colors.red, self.target.class.name,
+                        Colors.white, " мертв!"
+                    }
+                )
+            )
+        end
 
         if self.target:get_control() == CharacterControl.player then
             Log.debug("Player is dead!!")
@@ -79,20 +149,43 @@ function FightAction:perform(data)
             ". " .. self.target.class.name .. " is still alive!"
         )
 
-        data.event_manager:fireEvent(
-            ScreenLogEvent(
-                {
-                    Colors.red, data.actor.class.name,
-                    Colors.white, " бьет ",
-                    Colors.red, self.target.class.name,
-                    Colors.white, " и вносит урон ",
-                    Colors.orange, actor_damage,
-                    Colors.white, ". Но ",
-                    Colors.red, self.target.class.name,
-                    Colors.white, " все еще жив!"
-                }
-            )
+        if is_crit then
+            data.event_manager:fireEvent(
+                ScreenLogEvent(
+                    {
+                        Colors.red, data.actor.class.name,
+                        Colors.white, " бьет ",
+                        Colors.red, self.target.class.name,
+                        Colors.white, " и вносит ",
+                        Colors.red, "критический",
+                        Colors.white," урон ",
+                        Colors.orange, actor_damage - target_defence,
+                        Colors.white, ". Зщита отбила ",
+                        Colors.orange, target_defence,
+                        Colors.white, " урона.",
+                        Colors.red, self.target.class.name,
+                        Colors.white, " все еще жив!"
+                    }
+                )
         )
+        else
+            data.event_manager:fireEvent(
+                ScreenLogEvent(
+                    {
+                        Colors.red, data.actor.class.name,
+                        Colors.white, " бьет ",
+                        Colors.red, self.target.class.name,
+                        Colors.white, " и вносит урон ",
+                        Colors.orange, actor_damage - target_defence,
+                        Colors.white, ". Зщита отбила ",
+                        Colors.orange, target_defence,
+                        Colors.white, " урона.",
+                        Colors.red, self.target.class.name,
+                        Colors.white, " все еще жив!"
+                    }
+                )
+            )
+        end
     end
 
     return ActionResult({succeeded = true, alternate = nil})

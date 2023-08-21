@@ -36,6 +36,8 @@ function Hero:initialize(data)
     self.max_hp = data.hp
     self.current_hp = data.hp
     self.damage = data.damage
+    self.hit_chance = data.hit_chance
+    self.crit_chance = data.crit_chance
     self.view_radius = data.view_radius
     self.speed = data.speed
     self.protection_chance = data.protection_chance

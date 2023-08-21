@@ -15,10 +15,12 @@ function Character:initialize(data)
     self.max_hp = nil
     self.current_hp = nil
     self.damage = {min = 0, max = 0}
+    self.hit_chance = 50
+    self.crit_chance = 10
     self.view_radius = nil
     self.speed = nil
     self.energy = 0
-    self.protection_chance = 0
+    self.protection_chance = 10
     self.defence = 0
 
     self.right_hand = nil
@@ -116,6 +118,14 @@ function Character:get_damage()
     end
 
     return result_damage
+end
+
+function Character:get_hit_chance()
+    return self.hit_chance
+end
+
+function Character:get_crit_chance()
+    return self.crit_chance
 end
 
 function Character:get_protection_chance()

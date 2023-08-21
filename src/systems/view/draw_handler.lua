@@ -150,6 +150,8 @@ function DrawHandler:draw_ui(data)
 
         local hero_hp = hero:get_hp()
         local hero_damage = hero:get_damage()
+        local hero_hit_chance = hero:get_hit_chance()
+        local hero_crit_chance = hero:get_crit_chance()
         local hero_speed = hero:get_speed()
         local hero_defence = hero:get_defence()
         local hero_protection_chance = hero:get_protection_chance()
@@ -264,32 +266,46 @@ function DrawHandler:draw_ui(data)
             (self.cell_size * 3) + 12 + self.cell_size * 8
         )
 
-        love.graphics.setColor(Colors.orange)
-        love.graphics.print(
-            "Урон: " .. hero_damage.min .. " - " .. hero_damage.max,
-            (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
-            (self.cell_size * 3) + 12 + self.cell_size * 8.5
-        )
-
         love.graphics.setColor(Colors.green)
         love.graphics.print(
             "Скорость: " .. hero_speed,
             (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
-            (self.cell_size * 3) + 12 + self.cell_size * 9
+            (self.cell_size * 3) + 12 + self.cell_size * 8.5
         )
 
         love.graphics.setColor(Colors.orange)
         love.graphics.print(
-            "Защита: " .. hero_defence,
+            "Урон: " .. hero_damage.min .. " - " .. hero_damage.max,
+            (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
+            (self.cell_size * 3) + 12 + self.cell_size * 9
+        )
+
+        love.graphics.setColor(Colors.white)
+        love.graphics.print(
+            "Шанс попасть: " .. hero_hit_chance .. "%",
             (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
             (self.cell_size * 3) + 12 + self.cell_size * 9.5
         )
 
         love.graphics.setColor(Colors.white)
         love.graphics.print(
-            "Шанс защиты: " .. hero_protection_chance .. "%",
+            "Шанс крит: " .. hero_crit_chance .. "%",
             (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
             (self.cell_size * 3) + 12 + self.cell_size * 10
+        )
+
+        love.graphics.setColor(Colors.orange)
+        love.graphics.print(
+            "Защита: " .. hero_defence,
+            (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
+            (self.cell_size * 3) + 12 + self.cell_size * 10.5
+        )
+
+        love.graphics.setColor(Colors.white)
+        love.graphics.print(
+            "Шанс защиты: " .. hero_protection_chance .. "%",
+            (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/4,
+            (self.cell_size * 3) + 12 + self.cell_size * 11
         )
 
         love.graphics.setColor(Colors.white)

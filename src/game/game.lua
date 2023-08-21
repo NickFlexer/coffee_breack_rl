@@ -33,6 +33,8 @@ function Game:initialize(data)
         {
             hp = 20,
             damage = {min = 1, max = 4},
+            hit_chance = 75,
+            crit_chance = 15,
             view_radius = 8,
             speed = 8,
             protection_chance = 30
