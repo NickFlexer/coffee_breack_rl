@@ -1,5 +1,7 @@
 local class = require "middleclass"
 
+local FSM = require "fsm"
+
 local BaseAI = require "logic.ai.base_ai"
 
 local FollowPathState = require "logic.ai.states.follow_path"
@@ -20,7 +22,7 @@ function ZombieAI:initialize(data)
         fight = FightState()
     }
 
-    self.fsm:set_owner(self)
+    self.fsm = FSM(self)
     self.fsm:set_global_state(self.states.zombie_brain)
     self.fsm:set_current_state(self.states.pass)
     self.fsm:set_previous_state(self.states.pass)

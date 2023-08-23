@@ -2,39 +2,32 @@
 -- grid.lua
 
 
-local Grid = {
-    direction = {
-        GRID_TOP_LEFT = {-1, -1},
-        GRID_TOP = {0, -1},
-        GRID_TOP_RIGHT = {1, -1},
-        GRID_LEFT = {-1, 0},
-        GRID_RIGHT = {1, 0},
-        GRID_BOTTOM_LEFT = {-1 , 1},
-        GRID_BOTTOM = {0, 1},
-        GRID_BOTTOM_RIGHT = {1, 1}
-    }
-}
-local Grid_mt = {__index = Grid}
+local Grid = {}
 
-function Grid:new(size_x, size_y, def_value)
+Grid.__index = Grid
+
+local function new(size_x, size_y, def_value)
     if not size_x or type(size_x) ~= "number" or size_x < 1 or not size_y or type(size_y) ~= "number" or size_y < 1 then
         error("Grid.new: size_x and size_y must be a number values equal or greater than 1")
     end
 
-    self.size_x = size_x
-    self.size_y = size_y
-    self.default_value = def_value or nil
-    self._grid = {}
+    local g = {}
 
-    for y = 1, self.size_y   do
-        for x = 1, self.size_x do
-            self:set_cell(x, y, self.default_value)
+    for y = 1, size_y   do
+        for x = 1, size_x do
+            g[(x - 1) * size_x + y] = def_value
         end
     end
 
-    local gr = setmetatable({}, Grid_mt)
-
-    return gr
+    return setmetatable(
+        {
+            size_x = size_x,
+            size_y = size_y,
+            default_value = def_value or nil,
+            _grid = g
+        },
+        Grid
+    )
 end
 
 function Grid:get_size()
@@ -380,4 +373,21 @@ function Grid:traverse(x, y, vector)
     return nil
 end
 
-return setmetatable(Grid, {__call = Grid.new})
+return setmetatable(
+    {
+        new = new,
+        direction = {
+            GRID_TOP_LEFT = {-1, -1},
+            GRID_TOP = {0, -1},
+            GRID_TOP_RIGHT = {1, -1},
+            GRID_LEFT = {-1, 0},
+            GRID_RIGHT = {1, 0},
+            GRID_BOTTOM_LEFT = {-1 , 1},
+            GRID_BOTTOM = {0, 1},
+            GRID_BOTTOM_RIGHT = {1, 1}
+        }
+    },
+    {
+        __call = function(_, ...) return new(...) end
+    }
+)

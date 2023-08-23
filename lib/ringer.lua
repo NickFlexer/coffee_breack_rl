@@ -49,6 +49,16 @@ function Ringer:remove(item)
     error("remove(): item '" .. tostring(item) .. "' not available")
 end
 
+function Ringer:is_exist(item)
+    for _, cur_item in pairs(self.buffer) do
+        if item == cur_item then
+            return true
+        end
+    end
+
+    return false
+end
+
 function Ringer:get()
     if #self.buffer == 0 then
         error("get(): buffer is empty!")

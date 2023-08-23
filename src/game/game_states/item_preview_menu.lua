@@ -62,9 +62,6 @@ function ItemPreviewMenu:enter(previous, item)
 
     self.item = item
 
-    print(self.item)
-    print(self.item:get_item_place())
-
     self.menu_items = {
         {
             text = "Подобрать",

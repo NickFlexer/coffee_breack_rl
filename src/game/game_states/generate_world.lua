@@ -1,10 +1,13 @@
 local class = require "middleclass"
 
+local Timer = require "hump.timer"
+
 local Colors = require "enums.colors"
+local MapTypes = require "enums.map_type"
 
 local GameplayEvent = require "game.game_events.gameplay_event"
 
-local Timer = require "hump.timer"
+local MushroomForestGenerator = require "world.generators.mushroom_forest"
 
 
 local GenerateWorld = class("GenerateWorld")
@@ -46,6 +49,11 @@ function GenerateWorld:enter(previous, map_type)
 
     self.map_type = map_type
     self.map_ready = false
+    self.generato = nil
+
+    if self.map_type == MapTypes.mushroom_forest then
+        self.generator = MushroomForestGenerator()
+    end
 
     Log.debug("GenerateWorld:enter ready")
 end
@@ -62,14 +70,17 @@ function GenerateWorld:update(dt)
     self.timer:update(dt)
 
     if not self.map_ready then
-        self.map_ready = self.map:generate(self.map_type)
+        -- self.map_ready = self.map:generate(self.map_type)
+        self.map_ready = self.generator:generate(self.map)
 
-        self.timer:after(
-            1,
-            function ()
-                self.game_event_manager:fireEvent(GameplayEvent())
-            end
-        )
+        if self.map_ready then
+            self.timer:after(
+                1,
+                function ()
+                    self.game_event_manager:fireEvent(GameplayEvent())
+                end
+            )
+        end
     end
 end
 

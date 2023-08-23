@@ -45,6 +45,8 @@ function ZombieBrainState:execute(owner, data)
     end
 
     if self.see_hero then
+        Log.trace("It see hero")
+
         local last_x, last_y = owner:get_last_hero_pos()
 
         if hero_pos_x == last_x and hero_pos_y == last_y then
@@ -84,6 +86,7 @@ function ZombieBrainState:execute(owner, data)
                     return
                 else
                     Log.trace("No path!")
+
                     return
                 end
             else

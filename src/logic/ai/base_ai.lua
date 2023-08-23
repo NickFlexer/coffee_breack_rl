@@ -1,13 +1,10 @@
 local class = require "middleclass"
 
-local FSM = require "fsm"
-
 
 local BaseAI = class("BaseAI")
 
 function BaseAI:initialize(data)
     self.path = nil
-    self.fsm = FSM(self)
     self.states = {}
 end
 

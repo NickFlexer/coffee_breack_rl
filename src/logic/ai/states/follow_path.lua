@@ -30,18 +30,21 @@ function FollowPathState:execute(owner, data)
     local path = owner:get_path()
 
     if not path then
+        Log.trace("not path revent_to_previous_state")
+
         owner:get_fsm():revent_to_previous_state()
 
         return
     end
 
     if data.map:get_grid():get_cell(path[1].x, path[1].y):get_character() then
+        Log.trace("revent_to_previous_state")
         owner:get_fsm():revent_to_previous_state()
     else
         local moving = data.character:get_moving_direction(cur_x, cur_y, path[1].x, path[1].y)
 
         if not moving then
-            owner:get_fsm():revent_to_previous_state()
+            -- owner:get_fsm():revent_to_previous_state()
 
             return
         end
@@ -54,6 +57,8 @@ function FollowPathState:execute(owner, data)
     table.remove(path, 1)
 
     if #path < 1 then
+        Log.trace("#path < 1 revent_to_previous_state")
+
         owner:set_path(nil)
         owner:get_fsm():revent_to_previous_state()
 

@@ -1,5 +1,7 @@
 local class = require "middleclass"
 
+local FSM = require "fsm"
+
 local BaseAI = require "logic.ai.base_ai"
 
 local CarelessState = require "logic.ai.states.careless"
@@ -17,7 +19,8 @@ function RabbitAI:initialize(data)
         pass = PassState(),
         follow_path = FollowPathState()
     }
-    self.fsm:set_owner(self)
+
+    self.fsm = FSM(self)
     self.fsm:set_current_state(self.states.careless)
 end
 

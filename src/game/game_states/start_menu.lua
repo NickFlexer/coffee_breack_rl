@@ -51,7 +51,7 @@ function StartMenuState:enter(previous)
         {
             text = "Новая игра",
             select = true,
-            action = function () self.game_event_manager:fireEvent(GenerateWorldEvent(MapType.mushroom_forest)) end
+            action = function () self.game_event_manager:fireEvent(GenerateWorldEvent()) end
         },
         {
             text = "Выход",

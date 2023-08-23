@@ -2,6 +2,8 @@ local class = require "middleclass"
 
 local Gamestate = require "hump.gamestate"
 
+local MapeTypes = require "enums.map_type"
+
 local GameplayEvent = require "game.game_events.gameplay_event"
 local StartMenuEvent = require "game.game_events.start_menu_event"
 local ExitMenuEvent = require "game.game_events.exit_menu_event"
@@ -29,7 +31,7 @@ function Game:initialize(data)
 
     self.game_event_manager = data.event_manager
 
-    local hero = Hero(
+    self.hero = Hero(
         {
             hp = 20,
             damage = {min = 1, max = 4},
@@ -40,14 +42,14 @@ function Game:initialize(data)
             protection_chance = 30
         }
     )
-    local map = Map({hero = hero})
+    local map = Map({hero = self.hero})
 
     self.states = {
         gameplay = GameplayState(
             {
                 event_manager = self.game_event_manager,
                 map = map,
-                hero = hero
+                hero = self.hero
             }
         ),
         start_menu = StartMenuState({event_manager = self.game_event_manager}),
@@ -56,20 +58,22 @@ function Game:initialize(data)
             {
                 event_manager = self.game_event_manager,
                 map = map,
-                hero = hero
+                hero = self.hero
             }
         ),
         post_mortem_menu = PostMortemMenuState({event_manager = self.game_event_manager}),
         item_preview = ItemPreviewMenuState(
             {
                 event_manager = self.game_event_manager,
-                hero = hero,
+                hero = self.hero,
                 map = map
             }
         )
     }
 
     Gamestate.registerEvents()
+
+    self.map_type = MapeTypes.mushroom_forest
 end
 
 function Game:handle_event(event)
@@ -80,7 +84,11 @@ function Game:handle_event(event)
     elseif event.class.name == ExitMenuEvent.name then
         Gamestate.switch(self.states.exit_menu)
     elseif event.class.name == GenerateWorldEvent.name then
-        Gamestate.switch(self.states.generate_world, event:get_map_type())
+        if self.hero:is_dead() then
+            self.hero:restore_hp()
+        end
+
+        Gamestate.switch(self.states.generate_world, self.map_type)
     elseif event.class.name == PostMortemEvent.name then
         Gamestate.switch(self.states.post_mortem_menu)
     elseif event.class.name == ItemPreviewEvent.name then

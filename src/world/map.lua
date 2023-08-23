@@ -49,6 +49,10 @@ function Map:get_grid()
     return self.world_map
 end
 
+function Map:clear_data()
+    self.characters = Ring()
+end
+
 function Map:generate(map_type)
     if not map_type then
         error("Map:generate No map_type!")
@@ -56,10 +60,6 @@ function Map:generate(map_type)
 
     if self.hero:is_dead() then
         self.hero:restore_hp()
-    end
-
-    for place, item in pairs(self.hero:get_items()) do
-        print(place, item)
     end
 
     for x, y, cell in self.world_map:iterate() do
@@ -82,7 +82,7 @@ function Map:generate(map_type)
         local pos_x, pos_y = math.random(self.map_size_x), math.random(self.map_size_y)
 
         if self.world_map:get_cell(pos_x, pos_y):get_name() == cells.ground then
-            self.world_map:get_cell(pos_x, pos_y):set_character(self.hero)
+            self:add_character(self.hero, pos_x, pos_y)
 
             break
         end
@@ -148,8 +148,7 @@ function Map:generate(map_type)
                 -- local unit = Rabbit({ai = RabbitAI(), hp = 4, view_radius = 8, speed = 12})
                 local unit = Zombie({ai = ZombieAI(), hp = 10, damage = {min = 1, max = 4}, view_radius = 8, speed = 6})
 
-                self.world_map:get_cell(pos_x, pos_y):set_character(unit)
-                self.characters:insert(unit)
+                self:add_character(unit, pos_x, pos_y)
 
                 break
             end
@@ -208,6 +207,26 @@ end
 
 function Map:get_characters()
     return self.characters
+end
+
+function Map:add_character(character, x, y)
+    if not self.characters:is_exist(character) then
+        self.characters:insert(character)
+    end
+
+    self.world_map:get_cell(x, y):set_character(character)
+end
+
+function Map:add_item(item, x, y)
+    local cur_cell = self.world_map:get_cell(x, y)
+
+    if cur_cell:can_place_item() then
+        cur_cell:set_item(item)
+
+        return true
+    else
+        return false
+    end
 end
 
 function Map:kill_character(character)
