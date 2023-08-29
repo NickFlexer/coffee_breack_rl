@@ -16,8 +16,11 @@ function ShortSword:initialize()
     self.tile = Cells.short_sword
     self.name = Items.short_sword
     self.visible_name = "Короткий меч"
-    self.attributes = {CharacterAttributes.damage}
+    self.attributes = {CharacterAttributes.damage, CharacterAttributes.quality}
     self.item_place = ItemPlace.right_hand
+
+    self.cur_quality = 30
+    self.max_quality = 30
 end
 
 function ShortSword:get_damage_bust()

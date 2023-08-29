@@ -178,6 +178,50 @@ function Character:decreace_hp(damage)
     self.current_hp = math.max(self.current_hp - damage, 0)
 end
 
+function Character:decreace_armor_quality(damage)
+    local all_damage = damage
+
+    for _, item in pairs(self:get_items()) do
+        local attributes = item:get_attributes()
+
+        for _, attribute in pairs(attributes) do
+            if attribute == CharacterAttributes.defence then
+                all_damage = all_damage - item:get_defence_bust()
+                item:decreace_quality(item:get_defence_bust())
+
+                if all_damage <= 0 then
+                    return
+                end
+            end
+        end
+    end
+end
+
+function Character:decreace_weapon_quality(damage)
+    local item = self:get_item(ItemPlace.right_hand)
+
+    if item then
+        print(damage)
+        item:decreace_quality(damage)
+    end
+end
+
+function Character:check_item_destroyed()
+    local result = {}
+    for _, item in pairs(self:get_items()) do
+        if item:get_condition().cur == 0 then
+            table.insert(result, {name = item:get_visible_name()})
+            self:set_item(item:get_item_place(), nil)
+        end
+    end
+
+    if #result > 0 then
+        return result
+    else
+        return false
+    end
+end
+
 function Character:get_view_radius()
     return self.view_radius
 end

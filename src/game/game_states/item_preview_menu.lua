@@ -3,7 +3,6 @@ local class = require "middleclass"
 local TileDrawer = require "utils.tile_drawer"
 
 local Colors = require "enums.colors"
-local Cells = require "enums.cells"
 local CharacterAttributes = require "enums.character_attributes"
 local ItemPlace = require "enums.item_place"
 
@@ -238,12 +237,36 @@ function ItemPreviewMenu:draw()
                 new_attribute_color = Colors.red
                 current_attribute_color = Colors.green
             end
+        elseif attribute == CharacterAttributes.quality then
+            local new_condition = self.item:get_condition()
+            local cur_item_data = self.hero:get_item(self.item:get_item_place())
+
+            title_color = Colors.orange
+            title = "Состояние"
+            new_data = new_condition.cur/new_condition.max * 100
+
+            if cur_item_data then
+                local cur_condition = cur_item_data:get_condition()
+                current_data = cur_condition.cur/cur_condition.max * 100
+
+                if new_data > current_data then
+                    new_attribute_color = Colors.green
+                    current_attribute_color = Colors.red
+                elseif new_data < current_data then
+                    new_attribute_color = Colors.red
+                    current_attribute_color = Colors.green
+                end
+            else
+                current_data = "-"
+                new_attribute_color = Colors.green
+                current_attribute_color = Colors.red
+            end
         end
 
         love.graphics.setColor(title_color)
         love.graphics.print(
             title,
-            width/2 - self.cell_size * 6,
+            width/2 - self.cell_size * 8,
             (self.cell_size * 9)  + (index - 1) * self.cell_size/2
         )
 

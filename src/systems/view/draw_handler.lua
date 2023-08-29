@@ -208,10 +208,18 @@ function DrawHandler:draw_ui(data)
         )
 
         if hero_items.head then
+            local helmet_condition = hero_items.head:get_condition()
+
             self.tc:draw(
                 hero_items.head:get_tile(),
                 (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2,
                 (self.cell_size * 3) + 12 + self.cell_size
+            )
+
+            love.graphics.print(
+                math.floor(helmet_condition.cur/helmet_condition.max * 100) .. "%",
+                (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2,
+                (self.cell_size * 3) + 12 + self.cell_size * 2
             )
         end
 
@@ -225,10 +233,18 @@ function DrawHandler:draw_ui(data)
         )
 
         if hero_items.body then
+            local armor_condition = hero_items.body:get_condition()
+
             self.tc:draw(
                 hero_items.body:get_tile(),
                 (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2,
                 (self.cell_size * 3) + 12 + self.cell_size * 5
+            )
+
+            love.graphics.print(
+                math.floor(armor_condition.cur/armor_condition.max * 100) .. "%",
+                (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2,
+                (self.cell_size * 3) + 12 + self.cell_size * 6
             )
         end
 
@@ -251,10 +267,18 @@ function DrawHandler:draw_ui(data)
         )
 
         if hero_items.right_hand then
+            local weapon_condition = hero_items.right_hand:get_condition()
+
             self.tc:draw(
                 hero_items.right_hand:get_tile(),
                 (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2 + self.cell_size * 2,
                 (self.cell_size * 3) + 12 + self.cell_size * 3
+            )
+
+            love.graphics.print(
+                math.floor(weapon_condition.cur/weapon_condition.max * 100) .. "%",
+                (self.radius_x * 2 + 1) * self.cell_size + 16 + ui_panel_width/2 - self.cell_size/2 + self.cell_size * 2,
+                (self.cell_size * 3) + 12 + self.cell_size * 4
             )
         end
 

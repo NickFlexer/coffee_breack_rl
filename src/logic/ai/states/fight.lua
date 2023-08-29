@@ -22,7 +22,9 @@ function FightState:execute(owner, data)
 
         self.target = nil
     else
-        owner:get_fsm():revent_to_previous_state()
+        self.target = nil
+
+        return
     end
 end
 

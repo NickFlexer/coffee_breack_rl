@@ -16,8 +16,11 @@ function LeatherHelmet:initialize()
     self.name = Items.leather_helmet
     self.tile = Cells.leather_helmet
     self.visible_name = "Кожаный шлем"
-    self.attributes = {CharacterAttributes.defence}
+    self.attributes = {CharacterAttributes.defence, CharacterAttributes.quality}
     self.item_place = ItemPlace.head
+
+    self.cur_quality = 10
+    self.max_quality = 10
 end
 
 function LeatherHelmet:get_defence_bust()

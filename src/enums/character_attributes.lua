@@ -1,6 +1,7 @@
 local CharacterAttributes = {
     damage = "DAMAGE",
-    defence = "DEFENCE"
+    defence = "DEFENCE",
+    quality = "QUALITY"
 }
 
 return CharacterAttributes

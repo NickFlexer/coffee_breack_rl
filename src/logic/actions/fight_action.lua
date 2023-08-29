@@ -89,7 +89,17 @@ function FightAction:perform(data)
         result_damage = 0
     end
 
+    if target_defence > 0 then
+        self.target:decreace_armor_quality(target_defence)
+    end
+
+    if result_damage > 0 then
+        data.actor:decreace_weapon_quality(result_damage)
+    end
+
     self.target:decreace_hp(result_damage)
+    local is_target_item_destroyed = self.target:check_item_destroyed()
+    local is_actor_item_destroyed = data.actor:check_item_destroyed()
 
     if self.target:is_dead() then
         Log.trace(data.actor.class.name .." hit " .. self.target.class.name .." and caused damage " .. actor_damage ..
@@ -162,7 +172,7 @@ function FightAction:perform(data)
                         Colors.orange, actor_damage - target_defence,
                         Colors.white, ". Зщита отбила ",
                         Colors.orange, target_defence,
-                        Colors.white, " урона.",
+                        Colors.white, " урона. ",
                         Colors.red, self.target.class.name,
                         Colors.white, " все еще жив!"
                     }
@@ -179,9 +189,35 @@ function FightAction:perform(data)
                         Colors.orange, actor_damage - target_defence,
                         Colors.white, ". Зщита отбила ",
                         Colors.orange, target_defence,
-                        Colors.white, " урона.",
+                        Colors.white, " урона. ",
                         Colors.red, self.target.class.name,
                         Colors.white, " все еще жив!"
+                    }
+                )
+            )
+        end
+    end
+
+    if is_target_item_destroyed then
+        for _, item_data in ipairs(is_target_item_destroyed) do
+            data.event_manager:fireEvent(
+                ScreenLogEvent(
+                    {
+                        Colors.red, item_data.name,
+                        Colors.white, " безвозвратно разрушается!"
+                    }
+                )
+            )
+        end
+    end
+
+    if is_actor_item_destroyed then
+        for _, item_data in ipairs(is_actor_item_destroyed) do
+            data.event_manager:fireEvent(
+                ScreenLogEvent(
+                    {
+                        Colors.red, item_data.name,
+                        Colors.white, " безвозвратно разрушается!"
                     }
                 )
             )

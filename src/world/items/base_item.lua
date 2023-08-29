@@ -12,6 +12,9 @@ function BaseItem:initialize(data)
 
     self.attributes = {}
     self.item_place = nil
+
+    self.cur_quality = 0
+    self.max_quality = 0
 end
 
 function BaseItem:get_tile()
@@ -32,6 +35,18 @@ end
 
 function BaseItem:get_item_place()
     return self.item_place
+end
+
+function BaseItem:get_condition()
+    return {cur = self.cur_quality, max = self.max_quality}
+end
+
+function BaseItem:decreace_quality(value)
+    self.cur_quality = self.cur_quality - value
+
+    if self.cur_quality < 0 then
+        self.cur_quality = 0
+    end
 end
 
 function BaseItem:get_message()
