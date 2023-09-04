@@ -74,6 +74,7 @@ function Game:initialize(data)
     Gamestate.registerEvents()
 
     self.map_type = MapeTypes.mushroom_forest
+    self.current_world = 0
 end
 
 function Game:handle_event(event)
@@ -85,10 +86,13 @@ function Game:handle_event(event)
         Gamestate.switch(self.states.exit_menu)
     elseif event.class.name == GenerateWorldEvent.name then
         if self.hero:is_dead() then
-            self.hero:restore_hp()
+            self.hero:restore()
+            self.current_world = 0
         end
 
-        Gamestate.switch(self.states.generate_world, self.map_type)
+        self.current_world = self.current_world + 1
+
+        Gamestate.switch(self.states.generate_world, self.map_type, self.current_world)
     elseif event.class.name == PostMortemEvent.name then
         Gamestate.switch(self.states.post_mortem_menu)
     elseif event.class.name == ItemPreviewEvent.name then

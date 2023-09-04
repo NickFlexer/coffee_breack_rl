@@ -230,8 +230,12 @@ function Character:is_dead()
     return self.current_hp == 0
 end
 
-function Character:restore_hp()
+function Character:restore()
     self.current_hp = self.max_hp
+
+    self.right_hand = nil
+    self.head = nil
+    self.body = nil
 end
 
 function Character:get_speed()

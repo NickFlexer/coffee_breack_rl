@@ -9,22 +9,6 @@ local Bresenham = require "Bresenham"
 local SolveFovEvent = require "events.solve_fov_event"
 
 local Ground = require "world.cells.ground"
-local Mushroom = require "world.cells.mushroom"
-local Stairs = require "world.cells.stairs"
-
-local MapType = require "enums.map_type"
-local cells = require "enums.cells"
-
-local Rabbit = require "world.units.rabbit"
-local Zombie = require "world.units.zombie"
-
-local DummyAI = require "logic.ai.dummy"
-local RabbitAI = require "logic.ai.rabbit_ai"
-local ZombieAI = require "logic.ai.zombie_ai"
-
-local ShortSword = require "world.items.short_sword"
-local LeatherHelmet = require "world.items.leather_helmet"
-local LeatherJacket = require "world.items.leather_jacket"
 
 
 local Map = class("Map")
@@ -43,6 +27,9 @@ function Map:initialize(data)
     self.characters = Ring()
 
     self.characters:insert(self.hero)
+
+    self.world_name = nil
+    self.world_number = 0
 end
 
 function Map:get_grid()
@@ -224,6 +211,22 @@ function Map:is_character_near(source, target)
     end
 
     return false
+end
+
+function Map:get_title()
+    return self.world_name
+end
+
+function Map:set_title(title)
+    self.world_name = title
+end
+
+function Map:get_world_number()
+    return self.world_number
+end
+
+function Map:set_world_number(numb)
+    self.world_number = numb
 end
 
 return Map

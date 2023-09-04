@@ -84,7 +84,8 @@ function ViewSystem:handle_event(event)
 
         self.draw_handler:draw_ui({
             ui_canvas = self.ui_canvas,
-            hero = self.map:get_hero()
+            hero = self.map:get_hero(),
+            map = self.map
         })
     elseif event.class.name == ShowEffectEvent.name then
         if event:get_type() == EffectTypes.no_path then

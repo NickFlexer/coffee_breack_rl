@@ -142,6 +142,7 @@ end
 function DrawHandler:draw_ui(data)
     local ui_canvas = data.ui_canvas
     local hero = data.hero
+    local map = data.map
 
     local width, height = love.graphics.getDimensions()
 
@@ -166,6 +167,14 @@ function DrawHandler:draw_ui(data)
             (self.cell_size * 3) + 4
         )
 
+        love.graphics.setColor(Colors.green)
+        love.graphics.print(
+            map:get_title() .. " - " .. map:get_world_number(),
+            (self.radius_x * 2 + 1) * self.cell_size + self.cell_size * 2,
+            self.cell_size
+        )
+
+        love.graphics.setColor(Colors.white)
         love.graphics.rectangle(
             "line",
             (self.radius_x * 2 + 1) * self.cell_size + 16,

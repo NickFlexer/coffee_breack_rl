@@ -23,7 +23,7 @@ function MushroomForestGenerator:initialize()
     self.item_factory = ItemFactory()
 end
 
-function MushroomForestGenerator:generate(map)
+function MushroomForestGenerator:generate(map, world_number)
     map:clear_data()
     local map_grid = map:get_grid()
 
@@ -61,6 +61,9 @@ function MushroomForestGenerator:generate(map)
             return false
         end
     end
+
+    map:set_title("Грибной лес")
+    map:set_world_number(world_number)
 
     return true
 end

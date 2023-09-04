@@ -44,12 +44,13 @@ function GenerateWorld:init()
     Log.debug("GenerateWorld:init ready")
 end
 
-function GenerateWorld:enter(previous, map_type)
+function GenerateWorld:enter(previous, map_type, world_number)
     Log.debug("GenerateWorld:enter start")
 
     self.map_type = map_type
     self.map_ready = false
-    self.generato = nil
+    self.generator = nil
+    self.world_number = world_number
 
     if self.map_type == MapTypes.mushroom_forest then
         self.generator = MushroomForestGenerator()
@@ -70,8 +71,7 @@ function GenerateWorld:update(dt)
     self.timer:update(dt)
 
     if not self.map_ready then
-        -- self.map_ready = self.map:generate(self.map_type)
-        self.map_ready = self.generator:generate(self.map)
+        self.map_ready = self.generator:generate(self.map, self.world_number)
 
         if self.map_ready then
             self.timer:after(
