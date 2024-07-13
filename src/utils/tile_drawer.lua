@@ -16,6 +16,7 @@ function TileDrawer:initialize()
             {Cells.wall, 2, 2},
             {Cells.mushroom, 1, 21},
             {Cells.stairs, 6, 2},
+            {Cells.fountain, 6, 17},
 
             {Cells.barbarian, 3, 19},
             {Cells.rabbit, 2, 21},

@@ -21,7 +21,7 @@ end
 function Stairs:get_message()
     local message = {
         Colors.white, "Тут ",
-        Colors.green, "лестница",
+        Colors.green, "Лестница",
         Colors.white, " в неведомое подземелье. ",
         Colors.white, "Нажмите ",
         Colors.orange, "Enter",

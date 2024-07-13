@@ -4,6 +4,7 @@ local Cells = {
     wall = "WALL",
     mushroom = "MUSHROOM",
     stairs = "STAIRS",
+    fountain = "FOUNTAIN",
 
     barbarian = "BARBARIAN",
 

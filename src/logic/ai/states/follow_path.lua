@@ -30,6 +30,7 @@ function FollowPathState:execute(owner, data)
     local path = owner:get_path()
 
     if not path then
+        owner:set_path(nil)
         Log.trace("not path revent_to_previous_state")
 
         return

@@ -28,6 +28,7 @@ function love.load()
     game_event_manager:addListener("GenerateWorldEvent", game, game.handle_event)
     game_event_manager:addListener("PostMortemEvent", game, game.handle_event)
     game_event_manager:addListener("ItemPreviewEvent", game, game.handle_event)
+    game_event_manager:addListener("FountainPreviewEvent", game, game.handle_event)
 
     game_event_manager:fireEvent(StartMenuEvent())
 end

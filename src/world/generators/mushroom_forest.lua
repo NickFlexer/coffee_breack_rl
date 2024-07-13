@@ -5,6 +5,7 @@ local Grid = require "grid"
 local Ground = require "world.cells.ground"
 local Mushroom = require "world.cells.mushroom"
 local Stairs = require "world.cells.stairs"
+local Fountain = require "world.cells.fountain"
 
 local Cells = require "enums.cells"
 local MonsterLevel = require "enums.monster_level"
@@ -38,6 +39,12 @@ function MushroomForestGenerator:generate(map, world_number)
         if stair_result then
             break
         else
+            return false
+        end
+    end
+
+    if world_number % 3 == 0 then
+        if not self:_set_fountain(map) then
             return false
         end
     end
@@ -213,6 +220,24 @@ function MushroomForestGenerator:_set_stairs(map)
 
         if cell:get_name() == Cells.ground and not cell:get_character() then
             map_grid:set_cell(pos_x, pos_y, Stairs())
+
+            return map:solve_path(hero_x, hero_y, pos_x, pos_y)
+        end
+    end
+end
+
+function MushroomForestGenerator:_set_fountain(map)
+    local map_grid = map:get_grid()
+    local map_size_x, map_size_y = map:get_size()
+    local hero_x, hero_y = map:get_character_position(map:get_hero())
+
+    while true do
+        local pos_x, pos_y = math.random(map_size_x), math.random(map_size_y)
+
+        local cell = map_grid:get_cell(pos_x, pos_y)
+
+        if cell:get_name() == Cells.ground and not cell:get_character() then
+            map_grid:set_cell(pos_x, pos_y, Fountain())
 
             return map:solve_path(hero_x, hero_y, pos_x, pos_y)
         end
